@@ -84,9 +84,7 @@
       transition: background-color 0.2s;
       font-size: 0.9rem;
     }
-    button:hover {
-      background-color: #475569;
-    }
+    button:hover { background-color: #475569; }
     .btn-masivo { background-color: #6366f1; }
     .btn-masivo:hover { background-color: #4f46e5; }
     .btn-guardar { background-color: #10b981; }
@@ -237,10 +235,6 @@
           <input type="time" id="m_horaFin" value="03:00">
         </div>
         <div>
-          <label for="m_bono">Bono Fiesta c/u ($)</label>
-          <input type="number" id="m_bono" value="0">
-        </div>
-        <div>
           <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
         </div>
       </div>
@@ -278,10 +272,6 @@
           <input type="time" id="horaFin" value="03:00">
         </div>
         <div>
-          <label for="bono">Bono Fiesta ($)</label>
-          <input type="number" id="bono" value="0">
-        </div>
-        <div>
           <button onclick="agregarIndividual()">+ Guardar Turno</button>
         </div>
       </div>
@@ -301,6 +291,7 @@
           <th>Hs. Diurnas</th>
           <th>Hs. Nocturnas</th>
           <th>Hs. Feriado</th>
+          <th>Bono Fiesta</th>
           <th>Costo Total</th>
           <th>Acción</th>
         </tr>
@@ -338,6 +329,7 @@
 </div>
 
 <script>
+  // Tarifas por hora según la planilla del hotel (Columnas K y L)
   const tarifarioHora = {
     "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
     "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
@@ -354,7 +346,6 @@
   let listaEmpleados = [];
   let contadorPuestos = {};
 
-  // Inicializar al cargar la página
   window.onload = function() {
     cargarProyectosGuardadosUI();
   };
@@ -379,7 +370,6 @@
     const cantidad = parseInt(document.getElementById('m_cantidad').value) || 1;
     const horaInicio = document.getElementById('m_horaInicio').value;
     const horaFin = document.getElementById('m_horaFin').value;
-    const bono = parseFloat(document.getElementById('m_bono').value) || 0;
 
     if (!horaInicio || !horaFin) {
       alert("Ingresa hora de entrada y salida.");
@@ -389,7 +379,7 @@
     for (let i = 0; i < cantidad; i++) {
       contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
       const nombreEtiqueta = `${departamento} ${contadorPuestos[departamento]}`;
-      crearYGuardarEmpleado(evento, departamento, nombreEtiqueta, horaInicio, horaFin, bono);
+      crearYGuardarEmpleado(evento, departamento, nombreEtiqueta, horaInicio, horaFin);
     }
 
     actualizarTabla();
@@ -401,7 +391,6 @@
     let nombre = document.getElementById('nombreEmpl').value.trim();
     const horaInicio = document.getElementById('horaInicio').value;
     const horaFin = document.getElementById('horaFin').value;
-    const bono = parseFloat(document.getElementById('bono').value) || 0;
 
     if (!horaInicio || !horaFin) {
       alert("Ingresa hora de entrada y salida.");
@@ -413,19 +402,30 @@
       nombre = `${departamento} ${contadorPuestos[departamento]}`;
     }
 
-    crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin, bono);
+    crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin);
     document.getElementById('nombreEmpl').value = '';
     actualizarTabla();
   }
 
-  function crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin, bono) {
+  function crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin) {
     const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin);
     const tarifa = tarifarioHora[departamento] || { diurno: 11674.65, nocturno: 13191.07 };
+
+    // LÓGICA AUTOMÁTICA DEL BONO DE FIESTA:
+    // Aplica si es Nochebuena (24 Dec) o Fin de Año (31 Dec) y el empleado sale después de las 00:00 hs.
+    // Cálculo: (Costo Empresa Nocturno / 2) * Horas desde las 21:00 hs hasta egreso.
+    let bonoFiesta = 0;
+    const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
+    
+    if (esCena24o31 && desglose.pasaMedianoche) {
+      const horasDesdeLas21 = desglose.horasPost21;
+      bonoFiesta = (tarifa.nocturno / 2) * horasDesdeLas21;
+    }
 
     const costoDiurno = desglose.diurnas * tarifa.diurno;
     const costoNocturno = desglose.nocturnas * tarifa.nocturno;
     const costoFeriado = desglose.feriado * tarifa.diurno; 
-    const costoTotal = costoDiurno + costoNocturno + costoFeriado + bono;
+    const costoTotal = costoDiurno + costoNocturno + costoFeriado + bonoFiesta;
 
     listaEmpleados.push({
       id: Date.now() + Math.random(),
@@ -436,6 +436,7 @@
       horasDiurnas: desglose.diurnas.toFixed(1),
       horasNocturnas: desglose.nocturnas.toFixed(1),
       horasFeriado: desglose.feriado.toFixed(1),
+      bonoFiesta,
       costoTotal
     });
   }
@@ -447,13 +448,16 @@
     let tInicio = h1 + m1 / 60;
     let tFin = h2 + m2 / 60;
 
+    let pasaMedianoche = false;
     if (tFin <= tInicio) {
-      tFin += 24;
+      tFin += 24; // Pasa la medianoche (salida al día siguiente)
+      pasaMedianoche = true;
     }
 
     let diurnas = 0;
     let nocturnas = 0;
     let feriado = 0;
+    let horasPost21 = 0;
 
     const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
     const esAlmuerzoFeriado = evento.includes('25 Dec') || evento.includes('1 Jan');
@@ -462,12 +466,19 @@
       let horaDelDia = t % 24;
       let esSegundoDia = t >= 24;
 
+      // Horas Diurnas (06:00 a 21:00) vs Nocturnas (21:00 a 06:00)
       if (horaDelDia >= 6 && horaDelDia < 21) {
         diurnas += 0.25;
       } else {
         nocturnas += 0.25;
       }
 
+      // Horas desde las 21:00 hs para el Bono de Fiesta
+      if (t >= 21) {
+        horasPost21 += 0.25;
+      }
+
+      // Horas Feriado:
       if (esCena24o31 && esSegundoDia) {
         feriado += 0.25;
       }
@@ -476,7 +487,7 @@
       }
     }
 
-    return { diurnas, nocturnas, feriado };
+    return { diurnas, nocturnas, feriado, pasaMedianoche, horasPost21 };
   }
 
   function eliminarEmpleado(id) {
@@ -500,6 +511,7 @@
         <td>${e.horasDiurnas} hs</td>
         <td>${e.horasNocturnas} hs</td>
         <td>${e.horasFeriado} hs</td>
+        <td>$${e.bonoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
         <td>$${e.costoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
         <td><button class="btn-danger" onclick="eliminarEmpleado(${e.id})">x</button></td>
       `;
@@ -510,7 +522,7 @@
       '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 
-  // --- LÓGICA DE ALMACENAMIENTO (LOCALSTORAGE) ---
+  // --- ALMACENAMIENTO LOCAL (LOCALSTORAGE) ---
 
   function guardarPresupuesto() {
     if (listaEmpleados.length === 0) {
@@ -522,7 +534,6 @@
     if (!nombre) return;
 
     const proyectosGuardados = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
-    
     let totalMonto = listaEmpleados.reduce((acc, e) => acc + e.costoTotal, 0);
 
     const nuevoProyecto = {
