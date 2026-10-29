@@ -3,36 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Personal - Hotel</title>
+  <title>Gestión de Personal - Hotel (Modo Oscuro Suave)</title>
   <style>
     :root {
-      --primary: #475569;
-      --primary-light: #f1f5f9;
-      --secondary: #64748b;
-      --accent: #6366f1;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #334155;
-      --border: #e2e8f0;
-      --table-header: #f1f5f9;
+      --bg: #0f172a;               /* Fondo general gris muy oscuro */
+      --card-bg: #1e293b;          /* Tarjetas gris pizarra */
+      --card-border: #334155;      /* Borde sutil gris medio */
+      --text-main: #f8fafc;        /* Texto principal blanco hueso */
+      --text-muted: #94a3b8;       /* Texto secundario gris claro */
+      --primary: #cbd5e1;          /* Encabezados gris pastel */
+      --accent: #6366f1;           /* Botón principal púrpura/azul suave */
+      --accent-hover: #4f46e5;
+      --table-header: #334155;     /* Encabezado de tablas */
+      --input-bg: #0f172a;         /* Fondo de inputs */
+      --input-border: #475569;
     }
+
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background-color: var(--bg);
-      color: var(--text);
+      color: var(--text-main);
       margin: 0;
       padding: 24px;
     }
+
     .container {
       max-width: 1100px;
       margin: 0 auto;
     }
+
     header {
       text-align: center;
       margin-bottom: 15px;
     }
     header h1 {
-      color: var(--primary);
+      color: var(--text-main);
       font-size: 1.8rem;
       margin-bottom: 6px;
       font-weight: 600;
@@ -46,20 +51,21 @@
       margin-bottom: 20px;
     }
     .nav-btn {
-      background: #e2e8f0;
-      color: #475569;
+      background: #334155;
+      color: #cbd5e1;
       padding: 12px 24px;
       border-radius: 10px;
       font-weight: 700;
       font-size: 1rem;
-      border: none;
+      border: 1px solid var(--card-border);
       cursor: pointer;
       transition: all 0.2s;
     }
     .nav-btn.active {
       background: var(--accent);
-      color: white;
-      box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
     }
     
     /* PANEL SUPERIOR FIJO (STICKY) */
@@ -67,7 +73,7 @@
       position: sticky;
       top: 10px;
       z-index: 100;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
     }
 
     .card {
@@ -75,7 +81,7 @@
       border-radius: 12px;
       padding: 20px;
       margin-bottom: 20px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--card-border);
     }
     .grid-inputs {
       display: grid;
@@ -88,25 +94,25 @@
       font-weight: 600;
       margin-bottom: 6px;
       font-size: 0.85rem;
-      color: #64748b;
+      color: var(--text-muted);
     }
     select, input {
       width: 100%;
       padding: 9px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--input-border);
       border-radius: 8px;
       box-sizing: border-box;
-      background-color: #fafafa;
-      color: var(--text);
+      background-color: var(--input-bg);
+      color: var(--text-main);
       font-size: 0.9rem;
     }
     select:focus, input:focus {
       outline: none;
       border-color: var(--accent);
-      background-color: #fff;
     }
+    
     button {
-      background-color: var(--secondary);
+      background-color: #475569;
       color: white;
       border: none;
       padding: 9px 16px;
@@ -116,10 +122,10 @@
       transition: background-color 0.2s;
       font-size: 0.88rem;
     }
-    button:hover { background-color: #475569; }
-    .btn-masivo { background-color: #6366f1; }
-    .btn-masivo:hover { background-color: #4f46e5; }
-    .btn-guardar { background-color: #10b981; }
+    button:hover { background-color: #64748b; }
+    .btn-masivo { background-color: var(--accent); }
+    .btn-masivo:hover { background-color: var(--accent-hover); }
+    .btn-guardar { background-color: #10b981; color: #ffffff; }
     .btn-guardar:hover { background-color: #059669; }
     
     table {
@@ -129,43 +135,47 @@
       font-size: 0.88rem;
     }
     th, td {
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--card-border);
       padding: 10px;
       text-align: left;
+      color: var(--text-main);
     }
     th {
       background-color: var(--table-header);
       color: var(--primary);
       font-weight: 600;
     }
+
+    /* BADGES / ETIQUETAS */
     .badge {
-      background: #e0e7ff;
-      color: #3730a3;
+      background: #312e81;
+      color: #c7d2fe;
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 500;
     }
     .badge-prep {
-      background: #fef3c7;
-      color: #92400e;
+      background: #78350f;
+      color: #fef3c7;
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 500;
     }
     .badge-otros {
-      background: #e0f2fe;
-      color: #0369a1;
+      background: #075985;
+      color: #e0f2fe;
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 500;
     }
+
     .total-box {
-      background-color: #f1f5f9;
-      border: 1px solid var(--border);
-      color: var(--primary);
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
       padding: 18px 24px;
       border-radius: 12px;
       text-align: right;
@@ -176,26 +186,26 @@
       align-items: center;
     }
     .btn-danger {
-      background-color: #fca5a5;
-      color: #991b1b;
+      background-color: #991b1b;
+      color: #fecaca;
       padding: 4px 10px;
       font-size: 0.8rem;
       border-radius: 6px;
     }
     .btn-danger:hover {
-      background-color: #f87171;
+      background-color: #dc2626;
       color: white;
     }
     .tabs-header {
       display: flex;
       gap: 10px;
       margin-bottom: 14px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--card-border);
       padding-bottom: 8px;
     }
     .tab-btn {
       background: transparent;
-      color: #64748b;
+      color: var(--text-muted);
       padding: 6px 14px;
       border-radius: 6px;
       cursor: pointer;
@@ -203,23 +213,23 @@
       border: none;
     }
     .tab-btn.active {
-      background: var(--primary-light);
-      color: var(--primary);
+      background: var(--table-header);
+      color: var(--text-main);
     }
     .acciones-proyectos {
       display: flex;
       gap: 6px;
     }
     .box-preparativos {
-      background-color: #fffbeb;
-      border: 1px solid #fde68a;
+      background-color: #292524;
+      border: 1px solid #78350f;
       padding: 10px;
       border-radius: 8px;
       margin-top: 10px;
     }
     .box-aumento {
-      background-color: #ecfdf5;
-      border: 1px solid #a7f3d0;
+      background-color: #064e3b;
+      border: 1px solid #047857;
       padding: 10px;
       border-radius: 8px;
     }
@@ -251,14 +261,14 @@
       <div class="card" style="margin-bottom: 10px; padding: 16px;">
         <div class="grid-inputs" style="grid-template-columns: 2fr 2fr 1fr;">
           <div>
-            <label for="tipoCarga" style="font-size: 0.95rem; color: var(--primary);">Tipo de Asignación:</label>
+            <label for="tipoCarga">Tipo de Asignación:</label>
             <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
               <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
               <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
             </select>
           </div>
           <div>
-            <label for="evento" style="font-size: 0.95rem; color: var(--primary);">Fiesta Imputada / Evento:</label>
+            <label for="evento">Fiesta Imputada / Evento:</label>
             <select id="evento" style="font-weight: 600;">
               <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
                 <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
@@ -282,8 +292,8 @@
           </div>
 
           <div class="box-aumento">
-            <label for="porcentajeAumento" style="color: #065f46; font-size: 0.85rem;">📈 Aumento Salarial %</label>
-            <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #a7f3d0; background-color: #ffffff;">
+            <label for="porcentajeAumento" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+            <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
           </div>
         </div>
 
@@ -307,25 +317,25 @@
       <div class="card" style="margin-bottom: 10px; padding: 16px;">
         <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
           <div>
-            <label for="nombreOtroEvento" style="font-size: 0.95rem; color: var(--primary);">Nombre del Evento:</label>
+            <label for="nombreOtroEvento">Nombre del Evento:</label>
             <input type="text" id="nombreOtroEvento" placeholder="Ej: Boda Perez - Gomez / Evento Corporativo" style="font-weight: 600;">
           </div>
           <div>
-            <label for="esFeriadoOtro" style="font-size: 0.95rem; color: var(--primary);">¿Es Feriado Nacional?</label>
+            <label for="esFeriadoOtro">¿Es Feriado Nacional?</label>
             <select id="esFeriadoOtro" style="font-weight: 600;">
               <option value="No">No (Jornada Normal)</option>
               <option value="Si">Sí (100% Recargo Feriado)</option>
             </select>
           </div>
           <div class="box-aumento">
-            <label for="porcentajeAumentoOtros" style="color: #065f46; font-size: 0.85rem;">📈 Aumento Salarial %</label>
-            <input type="number" id="porcentajeAumentoOtros" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #a7f3d0; background-color: #ffffff;">
+            <label for="porcentajeAumentoOtros" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+            <input type="number" id="porcentajeAumentoOtros" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
           </div>
         </div>
       </div>
     </div>
 
-    <!-- FORMULARIO DE CARGA DE PERSONAL (COMPARTIDO) -->
+    <!-- FORMULARIO DE CARGA DE PERSONAL -->
     <div class="card" style="padding: 16px;">
       <div class="tabs-header">
         <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
@@ -409,7 +419,7 @@
   <!-- TABLA DE DETALLE DE TURNOS -->
   <div class="card">
     <div class="table-header-flex">
-      <h3 style="margin: 0; color: var(--primary); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
+      <h3 style="margin: 0; color: var(--text-main); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
       <button class="btn-danger" onclick="borrarTodosLosTurnos()">🗑️ Vaciar Planilla / Borrar Todos</button>
     </div>
     <table>
@@ -436,7 +446,7 @@
 
   <!-- TABLA CONSOLIDADA POR FIESTA O EVENTO -->
   <div class="card">
-    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📊 Resumen Consolidado de Costos por Evento</h3>
+    <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem;">📊 Resumen Consolidado de Costos por Evento</h3>
     <table>
       <thead>
         <tr>
@@ -461,7 +471,7 @@
 
   <!-- HISTORIAL DE PROYECTOS GUARDADOS -->
   <div class="card" style="margin-top: 24px;">
-    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
+    <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
     <table>
       <thead>
         <tr>
@@ -495,7 +505,7 @@
 
   let listaEmpleados = [];
   let contadorPuestos = {};
-  let moduloActivo = 'fiestas'; // 'fiestas' o 'otros'
+  let moduloActivo = 'fiestas';
 
   window.onload = function() {
     cargarProyectosGuardadosUI();
@@ -594,7 +604,7 @@
       infoTipo = esPreparativo ? `🛠️ Prep (${fechaPrep})` : '🎉 Fiesta Fin de Año';
       if (esPreparativo) nombre = `${nombre} [${detallePrep}]`;
 
-    } else { // Módulo OTROS EVENTOS
+    } else {
       const nombreOtro = document.getElementById('nombreOtroEvento').value.trim() || 'Evento Especial';
       evento = nombreOtro;
       esOtroEvento = true;
@@ -623,7 +633,6 @@
   }
 
   function calcularMontoEmpleado(e) {
-    // Tomar el porcentaje de aumento del módulo correspondiente
     let pctInputId = e.modulo === 'fiestas' ? 'porcentajeAumento' : 'porcentajeAumentoOtros';
     const pctAumento = (parseFloat(document.getElementById(pctInputId).value) || 0) / 100;
 
@@ -635,8 +644,6 @@
     const desglose = calcularDesgloseExacto(e, e.horaInicio, e.horaFin);
 
     let bonoFiesta = 0;
-    
-    // Bono de Fiesta SOLO aplica en Módulo Fiestas (24 o 31 que pasan medianoche)
     if (e.modulo === 'fiestas' && !e.esPreparativo) {
       const esCena24o31 = e.evento.includes('24 Dec') || e.evento.includes('31 Dec');
       if (esCena24o31 && desglose.pasaMedianoche) {
@@ -646,7 +653,7 @@
 
     let multiplicadorFeriado = 1;
     if (e.modulo === 'otros' && e.esFeriadoGeneral) {
-      multiplicadorFeriado = 2; // Pago doble en feriados nacionales ordinarios
+      multiplicadorFeriado = 2;
     }
 
     const costoDiurno = desglose.diurnas * tarifaDiurna * multiplicadorFeriado;
@@ -699,7 +706,6 @@
         horasPost21 += 0.25;
       }
 
-      // Horas feriado para Fiestas de Fin de Año
       if (e.modulo === 'fiestas' && !e.esPreparativo) {
         if (esCena24o31 && esSegundoDia) feriadoFiestas += 0.25;
         if (esAlmuerzoFeriado) feriadoFiestas += 0.25;
