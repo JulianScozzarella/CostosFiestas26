@@ -6,16 +6,16 @@
   <title>Gestión de Personal - Hotel (Modo Oscuro Suave)</title>
   <style>
     :root {
-      --bg: #0f172a;               /* Fondo general gris muy oscuro */
+      --bg: #0f172a;               /* Fondo general gris oscuro */
       --card-bg: #1e293b;          /* Tarjetas gris pizarra */
-      --card-border: #334155;      /* Borde sutil gris medio */
-      --text-main: #f8fafc;        /* Texto principal blanco hueso */
-      --text-muted: #94a3b8;       /* Texto secundario gris claro */
-      --primary: #cbd5e1;          /* Encabezados gris pastel */
-      --accent: #6366f1;           /* Botón principal púrpura/azul suave */
+      --card-border: #334155;      /* Borde gris medio */
+      --text-main: #f8fafc;        /* Texto principal claro */
+      --text-muted: #94a3b8;       /* Texto secundario */
+      --primary: #cbd5e1;
+      --accent: #6366f1;           /* Violeta pastel */
       --accent-hover: #4f46e5;
-      --table-header: #334155;     /* Encabezado de tablas */
-      --input-bg: #0f172a;         /* Fondo de inputs */
+      --table-header: #334155;
+      --input-bg: #0f172a;
       --input-border: #475569;
     }
 
@@ -68,12 +68,12 @@
       box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
     }
     
-    /* PANEL SUPERIOR FIJO (STICKY) */
-    .sticky-panel {
+    /* ÚNICA BARRA FIJA (SOLO LOS FILTROS PRINCIPALES) */
+    .sticky-filters {
       position: sticky;
       top: 10px;
       z-index: 100;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
     }
 
     .card {
@@ -253,60 +253,57 @@
     <button class="nav-btn" id="nav-otros-btn" onclick="cambiarModulo('otros')">🎉 Otros Eventos (Todo el Año)</button>
   </div>
 
-  <!-- BLOQUE FIJO DE FILTROS Y CARGA (STICKY) -->
-  <div class="sticky-panel">
-    
+  <!-- FILTROS PRINCIPALES FIJOS (STICKY) -->
+  <div class="sticky-filters card" style="padding: 16px;">
     <!-- CONTROLES PARA MÓDULO FIESTAS -->
     <div id="modulo-fiestas">
-      <div class="card" style="margin-bottom: 10px; padding: 16px;">
-        <div class="grid-inputs" style="grid-template-columns: 2fr 2fr 1fr;">
-          <div>
-            <label for="tipoCarga">Tipo de Asignación:</label>
-            <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
-              <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
-              <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
-            </select>
-          </div>
-          <div>
-            <label for="evento">Fiesta Imputada / Evento:</label>
-            <select id="evento" style="font-weight: 600;">
-              <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
-                <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
-                <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
-                <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
-              </optgroup>
-              <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
-                <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
-                <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
-              </optgroup>
-              <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
-                <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
-                <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
-                <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
-              </optgroup>
-              <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
-                <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
-                <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
-              </optgroup>
-            </select>
-          </div>
-
-          <div class="box-aumento">
-            <label for="porcentajeAumento" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
-            <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
-          </div>
+      <div class="grid-inputs" style="grid-template-columns: 2fr 2fr 1fr;">
+        <div>
+          <label for="tipoCarga">Tipo de Asignación:</label>
+          <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
+            <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
+            <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
+          </select>
+        </div>
+        <div>
+          <label for="evento">Fiesta Imputada / Evento:</label>
+          <select id="evento" style="font-weight: 600;">
+            <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
+              <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
+              <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
+              <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
+            </optgroup>
+            <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
+              <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
+              <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
+            </optgroup>
+            <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
+              <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
+              <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
+              <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
+            </optgroup>
+            <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
+              <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
+              <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
+            </optgroup>
+          </select>
         </div>
 
-        <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
-          <div class="grid-inputs">
-            <div>
-              <label for="fechaPrep">Fecha de Armado / Preparativo:</label>
-              <input type="date" id="fechaPrep" value="2026-12-23">
-            </div>
-            <div>
-              <label for="detallePrep">Detalle de la Tarea:</label>
-              <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
-            </div>
+        <div class="box-aumento">
+          <label for="porcentajeAumento" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+          <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
+        </div>
+      </div>
+
+      <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
+        <div class="grid-inputs">
+          <div>
+            <label for="fechaPrep">Fecha de Armado / Preparativo:</label>
+            <input type="date" id="fechaPrep" value="2026-12-23">
+          </div>
+          <div>
+            <label for="detallePrep">Detalle de la Tarea:</label>
+            <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
           </div>
         </div>
       </div>
@@ -314,103 +311,101 @@
 
     <!-- CONTROLES PARA MÓDULO OTROS EVENTOS -->
     <div id="modulo-otros" style="display: none;">
-      <div class="card" style="margin-bottom: 10px; padding: 16px;">
-        <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
-          <div>
-            <label for="nombreOtroEvento">Nombre del Evento:</label>
-            <input type="text" id="nombreOtroEvento" placeholder="Ej: Boda Perez - Gomez / Evento Corporativo" style="font-weight: 600;">
-          </div>
-          <div>
-            <label for="esFeriadoOtro">¿Es Feriado Nacional?</label>
-            <select id="esFeriadoOtro" style="font-weight: 600;">
-              <option value="No">No (Jornada Normal)</option>
-              <option value="Si">Sí (100% Recargo Feriado)</option>
-            </select>
-          </div>
-          <div class="box-aumento">
-            <label for="porcentajeAumentoOtros" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
-            <input type="number" id="porcentajeAumentoOtros" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
-          </div>
+      <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
+        <div>
+          <label for="nombreOtroEvento">Nombre del Evento:</label>
+          <input type="text" id="nombreOtroEvento" placeholder="Ej: Boda Perez - Gomez / Evento Corporativo" style="font-weight: 600;">
+        </div>
+        <div>
+          <label for="esFeriadoOtro">¿Es Feriado Nacional?</label>
+          <select id="esFeriadoOtro" style="font-weight: 600;">
+            <option value="No">No (Jornada Normal)</option>
+            <option value="Si">Sí (100% Recargo Feriado)</option>
+          </select>
+        </div>
+        <div class="box-aumento">
+          <label for="porcentajeAumentoOtros" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+          <input type="number" id="porcentajeAumentoOtros" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULARIO DE CARGA DE PERSONAL -->
+  <div class="card" style="padding: 16px;">
+    <div class="tabs-header">
+      <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
+      <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
+    </div>
+
+    <!-- FORMULARIO MASIVO -->
+    <div id="form-masivo">
+      <div class="grid-inputs">
+        <div>
+          <label for="m_departamento">Departamento / Puesto</label>
+          <select id="m_departamento">
+            <option value="Cocina">Cocina</option>
+            <option value="Banquetes">Banquetes / Camarero</option>
+            <option value="Steward">Steward</option>
+            <option value="Ama de Llaves">Ama de Llaves</option>
+            <option value="Front">Front</option>
+            <option value="Health Club">Health Club</option>
+            <option value="Lavanderia">Lavandería</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
+        </div>
+        <div>
+          <label for="m_cantidad">Cantidad</label>
+          <input type="number" id="m_cantidad" value="1" min="1">
+        </div>
+        <div>
+          <label for="m_horaInicio">Hora Entrada</label>
+          <input type="time" id="m_horaInicio" value="18:00">
+        </div>
+        <div>
+          <label for="m_horaFin">Hora Salida</label>
+          <input type="time" id="m_horaFin" value="03:00">
+        </div>
+        <div>
+          <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
         </div>
       </div>
     </div>
 
-    <!-- FORMULARIO DE CARGA DE PERSONAL -->
-    <div class="card" style="padding: 16px;">
-      <div class="tabs-header">
-        <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
-        <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
-      </div>
-
-      <!-- FORMULARIO MASIVO -->
-      <div id="form-masivo">
-        <div class="grid-inputs">
-          <div>
-            <label for="m_departamento">Departamento / Puesto</label>
-            <select id="m_departamento">
-              <option value="Cocina">Cocina</option>
-              <option value="Banquetes">Banquetes / Camarero</option>
-              <option value="Steward">Steward</option>
-              <option value="Ama de Llaves">Ama de Llaves</option>
-              <option value="Front">Front</option>
-              <option value="Health Club">Health Club</option>
-              <option value="Lavanderia">Lavandería</option>
-              <option value="Limpieza">Limpieza</option>
-              <option value="Mantenimiento">Mantenimiento</option>
-              <option value="Seguridad">Seguridad</option>
-            </select>
-          </div>
-          <div>
-            <label for="m_cantidad">Cantidad</label>
-            <input type="number" id="m_cantidad" value="1" min="1">
-          </div>
-          <div>
-            <label for="m_horaInicio">Hora Entrada</label>
-            <input type="time" id="m_horaInicio" value="18:00">
-          </div>
-          <div>
-            <label for="m_horaFin">Hora Salida</label>
-            <input type="time" id="m_horaFin" value="03:00">
-          </div>
-          <div>
-            <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
-          </div>
+    <!-- FORMULARIO INDIVIDUAL -->
+    <div id="form-individual" style="display: none;">
+      <div class="grid-inputs">
+        <div>
+          <label for="departamento">Departamento / Puesto</label>
+          <select id="departamento">
+            <option value="Cocina">Cocina</option>
+            <option value="Banquetes">Banquetes / Camarero</option>
+            <option value="Steward">Steward</option>
+            <option value="Ama de Llaves">Ama de Llaves</option>
+            <option value="Front">Front</option>
+            <option value="Health Club">Health Club</option>
+            <option value="Lavanderia">Lavandería</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
         </div>
-      </div>
-
-      <!-- FORMULARIO INDIVIDUAL -->
-      <div id="form-individual" style="display: none;">
-        <div class="grid-inputs">
-          <div>
-            <label for="departamento">Departamento / Puesto</label>
-            <select id="departamento">
-              <option value="Cocina">Cocina</option>
-              <option value="Banquetes">Banquetes / Camarero</option>
-              <option value="Steward">Steward</option>
-              <option value="Ama de Llaves">Ama de Llaves</option>
-              <option value="Front">Front</option>
-              <option value="Health Club">Health Club</option>
-              <option value="Lavanderia">Lavandería</option>
-              <option value="Limpieza">Limpieza</option>
-              <option value="Mantenimiento">Mantenimiento</option>
-              <option value="Seguridad">Seguridad</option>
-            </select>
-          </div>
-          <div>
-            <label for="nombreEmpl">Nombre Empleado</label>
-            <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
-          </div>
-          <div>
-            <label for="horaInicio">Hora Entrada</label>
-            <input type="time" id="horaInicio" value="18:00">
-          </div>
-          <div>
-            <label for="horaFin">Hora Salida</label>
-            <input type="time" id="horaFin" value="03:00">
-          </div>
-          <div>
-            <button onclick="agregarIndividual()">+ Guardar Turno</button>
-          </div>
+        <div>
+          <label for="nombreEmpl">Nombre Empleado</label>
+          <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
+        </div>
+        <div>
+          <label for="horaInicio">Hora Entrada</label>
+          <input type="time" id="horaInicio" value="18:00">
+        </div>
+        <div>
+          <label for="horaFin">Hora Salida</label>
+          <input type="time" id="horaFin" value="03:00">
+        </div>
+        <div>
+          <button onclick="agregarIndividual()">+ Guardar Turno</button>
         </div>
       </div>
     </div>
