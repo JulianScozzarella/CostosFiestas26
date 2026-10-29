@@ -74,7 +74,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 15px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
     th, td {
       border: 1px solid var(--border);
@@ -163,30 +163,33 @@
         <div>
           <label for="m_departamento">Departamento / Puesto</label>
           <select id="m_departamento">
+            <option value="Ama de Llaves">Ama de Llaves</option>
             <option value="Banquetes">Banquetes / Camarero</option>
             <option value="Cocina">Cocina</option>
-            <option value="Steward">Steward</option>
-            <option value="Ama de Llaves">Ama de Llaves / Limpieza</option>
-            <option value="Front">Front / Recepción</option>
+            <option value="Front">Front</option>
+            <option value="Health Club">Health Club</option>
+            <option value="Lavanderia">Lavandería</option>
+            <option value="Limpieza">Limpieza</option>
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Seguridad">Seguridad</option>
+            <option value="Steward">Steward</option>
           </select>
         </div>
         <div>
           <label for="m_cantidad">Cantidad de Personas</label>
-          <input type="number" id="m_cantidad" value="6" min="1" placeholder="Ej: 6">
+          <input type="number" id="m_cantidad" value="1" min="1">
         </div>
         <div>
           <label for="m_horaInicio">Hora Entrada</label>
-          <input type="time" id="m_horaInicio" value="09:00">
+          <input type="time" id="m_horaInicio" value="18:00">
         </div>
         <div>
           <label for="m_horaFin">Hora Salida</label>
-          <input type="time" id="m_horaFin" value="18:00">
+          <input type="time" id="m_horaFin" value="03:00">
         </div>
         <div>
           <label for="m_bono">Bono Fiesta c/u ($)</label>
-          <input type="number" id="m_bono" value="0" placeholder="0">
+          <input type="number" id="m_bono" value="0">
         </div>
         <div>
           <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
@@ -201,13 +204,16 @@
         <div>
           <label for="departamento">Departamento / Puesto</label>
           <select id="departamento">
+            <option value="Ama de Llaves">Ama de Llaves</option>
             <option value="Banquetes">Banquetes / Camarero</option>
             <option value="Cocina">Cocina</option>
-            <option value="Steward">Steward</option>
-            <option value="Ama de Llaves">Ama de Llaves / Limpieza</option>
-            <option value="Front">Front / Recepción</option>
+            <option value="Front">Front</option>
+            <option value="Health Club">Health Club</option>
+            <option value="Lavanderia">Lavandería</option>
+            <option value="Limpieza">Limpieza</option>
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Seguridad">Seguridad</option>
+            <option value="Steward">Steward</option>
           </select>
         </div>
         <div>
@@ -216,7 +222,7 @@
         </div>
         <div>
           <label for="horaInicio">Hora Entrada</label>
-          <input type="time" id="horaInicio" value="19:00">
+          <input type="time" id="horaInicio" value="18:00">
         </div>
         <div>
           <label for="horaFin">Hora Salida</label>
@@ -224,7 +230,7 @@
         </div>
         <div>
           <label for="bono">Bono Fiesta ($)</label>
-          <input type="number" id="bono" value="0" placeholder="0">
+          <input type="number" id="bono" value="0">
         </div>
         <div>
           <button onclick="agregarIndividual()">+ Guardar Turno</button>
@@ -244,9 +250,9 @@
           <th>Puesto</th>
           <th>Empleado</th>
           <th>Horario</th>
-          <th>Horas Diurnas</th>
-          <th>Horas Nocturnas</th>
-          <th>Feriado?</th>
+          <th>Hs. Diurnas</th>
+          <th>Hs. Nocturnas</th>
+          <th>Hs. Feriado</th>
           <th>Costo Total</th>
           <th>Acción</th>
         </tr>
@@ -264,15 +270,18 @@
 </div>
 
 <script>
-  // Tarifas por HORA cargadas desde la tabla base del hotel (Diurno: 06-21 hs | Nocturno: 21-06 hs)
+  // Tarifas de columnas K (Diurno) y L (Nocturno) según la planilla del hotel
   const tarifarioHora = {
-    "Ama de Llaves": { diurno: 1234.25, nocturno: 1394.70 },
-    "Banquetes": { diurno: 1394.62, nocturno: 1575.92 },
-    "Cocina": { diurno: 1338.40, nocturno: 1512.39 },
-    "Front": { diurno: 1097.24, nocturno: 1239.88 },
-    "Mantenimiento": { diurno: 1097.24, nocturno: 1239.88 },
-    "Seguridad": { diurno: 1234.25, nocturno: 1394.70 },
-    "Steward": { diurno: 1097.24, nocturno: 1239.88 }
+    "Ama de Llaves": { diurno: 14838.76, nocturno: 16736.37 },
+    "Banquetes": { diurno: 16758.33, nocturno: 18911.05 },
+    "Cocina": { diurno: 16083.08, nocturno: 18148.65 },
+    "Front": { diurno: 13186.91, nocturno: 14878.61 },
+    "Health Club": { diurno: 16070.01, nocturno: 18133.89 },
+    "Lavanderia": { diurno: 13186.91, nocturno: 14878.61 },
+    "Limpieza": { diurno: 13186.91, nocturno: 14878.61 },
+    "Mantenimiento": { diurno: 13186.91, nocturno: 14878.61 },
+    "Seguridad": { diurno: 14838.76, nocturno: 16736.37 },
+    "Steward": { diurno: 13186.91, nocturno: 14878.61 }
   };
 
   let listaEmpleados = [];
@@ -292,7 +301,6 @@
     }
   }
 
-  // Carga Masiva (Ejemplo: 6 Camareros de 09:00 a 18:00)
   function agregarMasivo() {
     const evento = document.getElementById('evento').value;
     const departamento = document.getElementById('m_departamento').value;
@@ -302,7 +310,7 @@
     const bono = parseFloat(document.getElementById('m_bono').value) || 0;
 
     if (!horaInicio || !horaFin) {
-      alert("Por favor ingresa un horario de entrada y salida.");
+      alert("Ingresa hora de entrada y salida.");
       return;
     }
 
@@ -315,7 +323,6 @@
     actualizarTabla();
   }
 
-  // Carga Individual con Nombre Específico
   function agregarIndividual() {
     const evento = document.getElementById('evento').value;
     const departamento = document.getElementById('departamento').value;
@@ -325,7 +332,7 @@
     const bono = parseFloat(document.getElementById('bono').value) || 0;
 
     if (!horaInicio || !horaFin) {
-      alert("Por favor ingresa un horario de entrada y salida.");
+      alert("Ingresa hora de entrada y salida.");
       return;
     }
 
@@ -340,15 +347,15 @@
   }
 
   function crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin, bono) {
-    const desglose = calcularDesgloseHoras(horaInicio, horaFin);
-    const esFeriado = checkEsFeriado(evento, horaInicio, horaFin);
-    const multiplicadorFeriado = esFeriado ? 2 : 1;
+    const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin);
+    const tarifa = tarifarioHora[departamento] || { diurno: 13186.91, nocturno: 14878.61 };
 
-    const tarifa = tarifarioHora[departamento] || { diurno: 1200, nocturno: 1400 };
-
-    const costoDiurno = desglose.diurnas * tarifa.diurno * multiplicadorFeriado;
-    const costoNocturno = desglose.nocturnas * tarifa.nocturno * multiplicadorFeriado;
-    const costoTotal = costoDiurno + costoNocturno + bono;
+    // Fórmula del hotel:
+    // Costo = (Hs Diurnas * Valor Diurno) + (Hs Nocturnas * Valor Nocturno) + (Hs Feriado * Valor Diurno) + Bono
+    const costoDiurno = desglose.diurnas * tarifa.diurno;
+    const costoNocturno = desglose.nocturnas * tarifa.nocturno;
+    const costoFeriado = desglose.feriado * tarifa.diurno; 
+    const costoTotal = costoDiurno + costoNocturno + costoFeriado + bono;
 
     listaEmpleados.push({
       id: Date.now() + Math.random(),
@@ -358,12 +365,12 @@
       horario: `${horaInicio} a ${horaFin}`,
       horasDiurnas: desglose.diurnas.toFixed(1),
       horasNocturnas: desglose.nocturnas.toFixed(1),
-      esFeriado: esFeriado ? 'Sí (100%)' : 'No',
+      horasFeriado: desglose.feriado.toFixed(1),
       costoTotal
     });
   }
 
-  function calcularDesgloseHoras(inicio, fin) {
+  function calcularDesgloseExacto(evento, inicio, fin) {
     let [h1, m1] = inicio.split(':').map(Number);
     let [h2, m2] = fin.split(':').map(Number);
 
@@ -376,30 +383,34 @@
 
     let diurnas = 0;
     let nocturnas = 0;
+    let feriado = 0;
 
-    // Tramo de 15 minutos (0.25h)
+    // Determinar si el primer o segundo día son feriados (25/12 o 01/01)
+    const esEventoFeriado = evento.includes('25') || evento.includes('01');
+    const esNavidadOAnoNuevo = evento.includes('Navidad') || evento.includes('Nuevo');
+
     for (let t = tInicio; t < tFin; t += 0.25) {
       let horaDelDia = t % 24;
-      // Diurno entre 6 AM (6.0) y 9 PM (21.0)
+      let esSegundoDia = t >= 24;
+
+      // Classificar Diurno (06:00 - 21:00) vs Nocturno (21:00 - 06:00)
       if (horaDelDia >= 6 && horaDelDia < 21) {
         diurnas += 0.25;
       } else {
         nocturnas += 0.25;
       }
+
+      // Evaluar si ese tramo cae en día feriado (25 o 01)
+      if (esNavidadOAnoNuevo) {
+        if (!esSegundoDia && esEventoFeriado) {
+          feriado += 0.25; // Si la fiesta inicia el día del feriado
+        } else if (esSegundoDia && !esEventoFeriado) {
+          feriado += 0.25; // Si arranca el 24 o 31 y pasa de las 00:00 (entra al 25 o 1)
+        }
+      }
     }
 
-    return { diurnas, nocturnas };
-  }
-
-  function checkEsFeriado(evento, inicio, fin) {
-    let [h1] = inicio.split(':').map(Number);
-    let [h2] = fin.split(':').map(Number);
-    
-    // Si la fiesta es el 25/12 o 01/01 o si pasa de la medianoche
-    if (evento.includes('25') || evento.includes('01')) return true;
-    if (h2 < h1 || h2 === 0) return true; 
-    
-    return false;
+    return { diurnas, nocturnas, feriado };
   }
 
   function eliminarEmpleado(id) {
@@ -422,7 +433,7 @@
         <td>${e.horario}</td>
         <td>${e.horasDiurnas} hs</td>
         <td>${e.horasNocturnas} hs</td>
-        <td>${e.esFeriado}</td>
+        <td>${e.horasFeriado} hs</td>
         <td>$${e.costoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
         <td><button class="btn-danger" onclick="eliminarEmpleado(${e.id})">x</button></td>
       `;
