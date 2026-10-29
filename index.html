@@ -1,5 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Personal - Fiestas Hotel</title>
+  <style>
+    :root {
+      --primary: #475569;
+      --primary-light: #f1f5f9;
+      --secondary: #64748b;
+      --accent: #6366f1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #334155;
+      --border: #e2e8f0;
+      --table-header: #f1f5f9;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    header h1 {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
+    .grid-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      align-items: end;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-sizing: border-box;
+      background-color: #fafafa;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: #fff;
+    }
+    button {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-size: 0.9rem;
+    }
+    button:hover {
+      background-color: #475569;
+    }
+    .btn-masivo { background-color: #6366f1; }
+    .btn-masivo:hover { background-color: #4f46e5; }
+    .btn-guardar { background-color: #10b981; }
+    .btn-guardar:hover { background-color: #059669; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.88rem;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 10px;
+      text-align: left;
+    }
+    th {
+      background-color: var(--table-header);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .badge {
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .total-box {
+      background-color: #f1f5f9;
+      border: 1px solid var(--border);
+      color: var(--primary);
+      padding: 18px 24px;
+      border-radius: 12px;
+      text-align: right;
+      font-size: 1.25rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-danger {
+      background-color: #fca5a5;
+      color: #991b1b;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+    .btn-danger:hover {
+      background-color: #f87171;
+      color: white;
+    }
+    .tabs-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .tab-btn {
+      background: transparent;
+      color: #64748b;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      border: none;
+    }
+    .tab-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .acciones-proyectos {
+      display: flex;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Planificación de Personal - Eventos de Fin de Año</h1>
+  </header>
+
+  <!-- 1. SELECCIÓN DEL EVENTO -->
+  <div class="card">
+    <label for="evento" style="font-size: 1rem; color: var(--primary);">Seleccionar Fiesta / Evento:</label>
+    <select id="evento" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
+      <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
+        <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
+        <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
+        <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
+      </optgroup>
+      <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
+        <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
+        <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
+      </optgroup>
+      <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
+        <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
+        <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
+        <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
+      </optgroup>
+      <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
+        <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
+        <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <!-- 2. CARGA DE PERSONAL -->
+  <div class="card">
+    <div class="tabs-header">
+      <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
+      <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
+    </div>
+
+    <!-- FORMULARIO MASIVO -->
+    <div id="form-masivo">
+      <h4 style="margin-top:0; color: var(--primary); font-weight: 600;">Agregar grupo de empleados</h4>
+      <div class="grid-inputs">
+        <div>
+          <label for="m_departamento">Departamento / Puesto</label>
+          <select id="m_departamento">
+            <option value="Banquetes">Banquetes / Camarero</option>
+            <option value="Cocina">Cocina</option>
+            <option value="Steward">Steward</option>
+            <option value="Ama de Llaves">Ama de Llaves</option>
+            <option value="Front">Front</option>
+            <option value="Health Club">Health Club</option>
+            <option value="Lavanderia">Lavandería</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
+        </div>
+        <div>
+          <label for="m_cantidad">Cantidad</label>
+          <input type="number" id="m_cantidad" value="1" min="1">
+        </div>
+        <div>
+          <label for="m_horaInicio">Hora Entrada</label>
+          <input type="time" id="m_horaInicio" value="18:00">
+        </div>
+        <div>
+          <label for="m_horaFin">Hora Salida</label>
+          <input type="time" id="m_horaFin" value="03:00">
+        </div>
+        <div>
+          <label for="m_bono">Bono Fiesta c/u ($)</label>
+          <input type="number" id="m_bono" value="0">
+        </div>
+        <div>
+          <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULARIO INDIVIDUAL -->
+    <div id="form-individual" style="display: none;">
+      <h4 style="margin-top:0; color: var(--primary); font-weight: 600;">Agregar empleado específico</h4>
+      <div class="grid-inputs">
+        <div>
+          <label for="departamento">Departamento / Puesto</label>
+          <select id="departamento">
+            <option value="Banquetes">Banquetes / Camarero</option>
+            <option value="Cocina">Cocina</option>
+            <option value="Steward">Steward</option>
+            <option value="Ama de Llaves">Ama de Llaves</option>
+            <option value="Front">Front</option>
+            <option value="Health Club">Health Club</option>
+            <option value="Lavanderia">Lavandería</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
+        </div>
+        <div>
+          <label for="nombreEmpl">Nombre Empleado</label>
+          <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
+        </div>
+        <div>
+          <label for="horaInicio">Hora Entrada</label>
+          <input type="time" id="horaInicio" value="18:00">
+        </div>
+        <div>
+          <label for="horaFin">Hora Salida</label>
+          <input type="time" id="horaFin" value="03:00">
+        </div>
+        <div>
+          <label for="bono">Bono Fiesta ($)</label>
+          <input type="number" id="bono" value="0">
+        </div>
+        <div>
+          <button onclick="agregarIndividual()">+ Guardar Turno</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. TABLA DE DETALLE -->
+  <div class="card">
+    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">Detalle de Empleados Asignados</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Puesto</th>
+          <th>Empleado</th>
+          <th>Horario</th>
+          <th>Hs. Diurnas</th>
+          <th>Hs. Nocturnas</th>
+          <th>Hs. Feriado</th>
+          <th>Costo Total</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-cuerpo">
+        <!-- Contenido dinámico -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RESUMEN TOTAL Y BOTÓN DE GUARDAR -->
+  <div class="total-box">
+    <button class="btn-guardar" onclick="guardarPresupuesto()">💾 Guardar Este Presupuesto</button>
+    <div>Costo Total Proyectado: <span id="monto-total">$0.00</span></div>
+  </div>
+
+  <!-- 4. HISTORIAL DE PROYECTOS / PRESUPUESTOS GUARDADOS -->
+  <div class="card" style="margin-top: 24px;">
+    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha de Guardado</th>
+          <th>Nombre del Proyecto</th>
+          <th>Cant. Empleados</th>
+          <th>Monto Total</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-proyectos">
+        <!-- Proyectos guardados -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <script>
-  // TARIFAS DIRECTAS POR HORA de tu planilla (Columnas K y L)
   const tarifarioHora = {
     "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
     "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
@@ -15,6 +353,11 @@
 
   let listaEmpleados = [];
   let contadorPuestos = {};
+
+  // Inicializar al cargar la página
+  window.onload = function() {
+    cargarProyectosGuardadosUI();
+  };
 
   function mostrarTab(tipo) {
     if (tipo === 'masivo') {
@@ -79,8 +422,6 @@
     const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin);
     const tarifa = tarifarioHora[departamento] || { diurno: 11674.65, nocturno: 13191.07 };
 
-    // FÓRMULA EXACTA DEL EXCEL:
-    // (Hs Diurnas * Tarifa Diurna) + (Hs Nocturnas * Tarifa Nocturna) + (Hs Feriado * Tarifa Diurna) + Bono
     const costoDiurno = desglose.diurnas * tarifa.diurno;
     const costoNocturno = desglose.nocturnas * tarifa.nocturno;
     const costoFeriado = desglose.feriado * tarifa.diurno; 
@@ -107,28 +448,30 @@
     let tFin = h2 + m2 / 60;
 
     if (tFin <= tInicio) {
-      tFin += 24; // Cruza la medianoche
+      tFin += 24;
     }
 
     let diurnas = 0;
     let nocturnas = 0;
     let feriado = 0;
 
-    const esEvento24o31 = evento.includes('Navidad') || evento.includes('Nuevo');
+    const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
+    const esAlmuerzoFeriado = evento.includes('25 Dec') || evento.includes('1 Jan');
 
     for (let t = tInicio; t < tFin; t += 0.25) {
       let horaDelDia = t % 24;
       let esSegundoDia = t >= 24;
 
-      // Evaluar franja Diurna (06:00 - 21:00) vs Nocturna (21:00 - 06:00)
       if (horaDelDia >= 6 && horaDelDia < 21) {
         diurnas += 0.25;
       } else {
         nocturnas += 0.25;
       }
 
-      // Horas feriado: Si arranca el 24 o 31 y pasa de las 00:00 hs (segundo día)
-      if (esSegundoDia) {
+      if (esCena24o31 && esSegundoDia) {
+        feriado += 0.25;
+      }
+      if (esAlmuerzoFeriado) {
         feriado += 0.25;
       }
     }
@@ -166,4 +509,83 @@
     document.getElementById('monto-total').innerText = 
       '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
+
+  // --- LÓGICA DE ALMACENAMIENTO (LOCALSTORAGE) ---
+
+  function guardarPresupuesto() {
+    if (listaEmpleados.length === 0) {
+      alert("Agrega al menos un empleado antes de guardar el presupuesto.");
+      return;
+    }
+
+    const nombre = prompt("Ingresa un nombre para este proyecto / presupuesto:", "Presupuesto Eventos - " + new Date().toLocaleDateString('es-AR'));
+    if (!nombre) return;
+
+    const proyectosGuardados = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+    
+    let totalMonto = listaEmpleados.reduce((acc, e) => acc + e.costoTotal, 0);
+
+    const nuevoProyecto = {
+      id: Date.now(),
+      nombre,
+      fecha: new Date().toLocaleString('es-AR'),
+      cantEmpleados: listaEmpleados.length,
+      totalMonto,
+      datos: [...listaEmpleados]
+    };
+
+    proyectosGuardados.push(nuevoProyecto);
+    localStorage.setItem('proyectos_hotel', JSON.stringify(proyectosGuardados));
+
+    alert("¡Presupuesto guardado con éxito!");
+    cargarProyectosGuardadosUI();
+  }
+
+  function cargarProyectosGuardadosUI() {
+    const tbody = document.getElementById('tabla-proyectos');
+    tbody.innerHTML = '';
+    const proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+
+    if (proyectos.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">No hay presupuestos guardados aún.</td></tr>`;
+      return;
+    }
+
+    proyectos.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${p.fecha}</td>
+        <td><strong>${p.nombre}</strong></td>
+        <td>${p.cantEmpleados} pers.</td>
+        <td>$${p.totalMonto.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td class="acciones-proyectos">
+          <button onclick="cargarProyecto(${p.id})">📂 Cargar</button>
+          <button class="btn-danger" onclick="borrarProyecto(${p.id})">🗑️ Borrar</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function cargarProyecto(id) {
+    const proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+    const proj = proyectos.find(p => p.id === id);
+    if (proj) {
+      listaEmpleados = [...proj.datos];
+      actualizarTabla();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function borrarProyecto(id) {
+    if (confirm("¿Estás seguro de eliminar este presupuesto guardado?")) {
+      let proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+      proyectos = proyectos.filter(p => p.id !== id);
+      localStorage.setItem('proyectos_hotel', JSON.stringify(proyectos));
+      cargarProyectosGuardadosUI();
+    }
+  }
 </script>
+
+</body>
+</html>
