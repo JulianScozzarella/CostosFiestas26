@@ -1,287 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Personal - Fiestas Hotel</title>
-  <style>
-    :root {
-      --primary: #1e3a8a;
-      --secondary: #0d9488;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --border: #cbd5e1;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border);
-    }
-    .grid-inputs {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 12px;
-      align-items: end;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 5px;
-      font-size: 0.85rem;
-    }
-    select, input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: var(--secondary);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    .btn-masivo {
-      background-color: #3b82f6;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      font-size: 0.88rem;
-    }
-    th, td {
-      border: 1px solid var(--border);
-      padding: 8px 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #f1f5f9;
-      color: var(--primary);
-    }
-    .badge {
-      background: #e2e8f0;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-    }
-    .total-box {
-      background-color: #eff6ff;
-      border: 2px solid var(--primary);
-      padding: 15px;
-      border-radius: 8px;
-      text-align: right;
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .btn-danger {
-      background-color: #ef4444;
-      padding: 4px 8px;
-      font-size: 0.8rem;
-    }
-    .tabs-header {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    .tab-btn {
-      background: #e2e8f0;
-      color: #334155;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      border: none;
-    }
-    .tab-btn.active {
-      background: var(--primary);
-      color: white;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <header>
-    <h1>Planificación de Personal - Eventos de Fin de Año</h1>
-  </header>
-
-  <!-- 1. SELECCIÓN DEL EVENTO -->
-  <div class="card">
-    <label for="evento" style="font-size: 1.1rem; color: var(--primary);">Seleccionar Fiesta / Evento:</label>
-    <select id="evento" style="font-size: 1rem; font-weight: bold; padding: 10px;">
-      <optgroup label="Navidad (24 y 25 Diciembre)">
-        <option value="Girasoles - Navidad">Fiesta en Girasoles (Navidad)</option>
-        <option value="Las Vasijas - Navidad">Las Vasijas (Navidad)</option>
-        <option value="Don Giovanni - Navidad">Don Giovanni (Navidad)</option>
-      </optgroup>
-      <optgroup label="Año Nuevo (31 Diciembre y 1 Enero)">
-        <option value="Girasoles - Año Nuevo">Fiesta en Girasoles (Año Nuevo)</option>
-        <option value="Las Vasijas - Año Nuevo">Las Vasijas (Año Nuevo)</option>
-        <option value="Don Giovanni - Año Nuevo">Don Giovanni (Año Nuevo)</option>
-      </optgroup>
-    </select>
-  </div>
-
-  <!-- 2. MÓDULO DE CARGA (INDIVIDUAL / MASIVA) -->
-  <div class="card">
-    <div class="tabs-header">
-      <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
-      <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
-    </div>
-
-    <!-- FORMULARIO CARGA MASIVA -->
-    <div id="form-masivo">
-      <h4 style="margin-top:0; color: var(--primary);">Agregar grupo de empleados con el mismo horario</h4>
-      <div class="grid-inputs">
-        <div>
-          <label for="m_departamento">Departamento / Puesto</label>
-          <select id="m_departamento">
-            <option value="Ama de Llaves">Ama de Llaves</option>
-            <option value="Banquetes">Banquetes / Camarero</option>
-            <option value="Cocina">Cocina</option>
-            <option value="Front">Front</option>
-            <option value="Health Club">Health Club</option>
-            <option value="Lavanderia">Lavandería</option>
-            <option value="Limpieza">Limpieza</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Seguridad">Seguridad</option>
-            <option value="Steward">Steward</option>
-          </select>
-        </div>
-        <div>
-          <label for="m_cantidad">Cantidad de Personas</label>
-          <input type="number" id="m_cantidad" value="1" min="1">
-        </div>
-        <div>
-          <label for="m_horaInicio">Hora Entrada</label>
-          <input type="time" id="m_horaInicio" value="18:00">
-        </div>
-        <div>
-          <label for="m_horaFin">Hora Salida</label>
-          <input type="time" id="m_horaFin" value="03:00">
-        </div>
-        <div>
-          <label for="m_bono">Bono Fiesta c/u ($)</label>
-          <input type="number" id="m_bono" value="0">
-        </div>
-        <div>
-          <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- FORMULARIO CARGA INDIVIDUAL -->
-    <div id="form-individual" style="display: none;">
-      <h4 style="margin-top:0; color: var(--primary);">Agregar empleado específico con nombre</h4>
-      <div class="grid-inputs">
-        <div>
-          <label for="departamento">Departamento / Puesto</label>
-          <select id="departamento">
-            <option value="Ama de Llaves">Ama de Llaves</option>
-            <option value="Banquetes">Banquetes / Camarero</option>
-            <option value="Cocina">Cocina</option>
-            <option value="Front">Front</option>
-            <option value="Health Club">Health Club</option>
-            <option value="Lavanderia">Lavandería</option>
-            <option value="Limpieza">Limpieza</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Seguridad">Seguridad</option>
-            <option value="Steward">Steward</option>
-          </select>
-        </div>
-        <div>
-          <label for="nombreEmpl">Nombre del Empleado</label>
-          <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
-        </div>
-        <div>
-          <label for="horaInicio">Hora Entrada</label>
-          <input type="time" id="horaInicio" value="18:00">
-        </div>
-        <div>
-          <label for="horaFin">Hora Salida</label>
-          <input type="time" id="horaFin" value="03:00">
-        </div>
-        <div>
-          <label for="bono">Bono Fiesta ($)</label>
-          <input type="number" id="bono" value="0">
-        </div>
-        <div>
-          <button onclick="agregarIndividual()">+ Guardar Turno</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- 3. PLANILLA CON DETALLE Y CÁLCULO DE HORAS -->
-  <div class="card">
-    <h3>Detalle de Empleados Asignados</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Evento</th>
-          <th>Puesto</th>
-          <th>Empleado</th>
-          <th>Horario</th>
-          <th>Hs. Diurnas</th>
-          <th>Hs. Nocturnas</th>
-          <th>Hs. Feriado</th>
-          <th>Costo Total</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-cuerpo">
-        <!-- Contenido dinámico -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- RESUMEN -->
-  <div class="total-box">
-    Costo Total Proyectado: <span id="monto-total">$0.00</span>
-  </div>
-</div>
-
 <script>
-  // Tarifas de columnas K (Diurno) y L (Nocturno) según la planilla del hotel
+  // TARIFAS DIRECTAS POR HORA de tu planilla (Columnas K y L)
   const tarifarioHora = {
-    "Ama de Llaves": { diurno: 14838.76, nocturno: 16736.37 },
-    "Banquetes": { diurno: 16758.33, nocturno: 18911.05 },
-    "Cocina": { diurno: 16083.08, nocturno: 18148.65 },
-    "Front": { diurno: 13186.91, nocturno: 14878.61 },
-    "Health Club": { diurno: 16070.01, nocturno: 18133.89 },
-    "Lavanderia": { diurno: 13186.91, nocturno: 14878.61 },
-    "Limpieza": { diurno: 13186.91, nocturno: 14878.61 },
-    "Mantenimiento": { diurno: 13186.91, nocturno: 14878.61 },
-    "Seguridad": { diurno: 14838.76, nocturno: 16736.37 },
-    "Steward": { diurno: 13186.91, nocturno: 14878.61 }
+    "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
+    "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
+    "Cocina": { diurno: 14240.54, nocturno: 16091.10 },
+    "Front": { diurno: 11674.65, nocturno: 13191.07 },
+    "Health Club": { diurno: 14228.95, nocturno: 16079.26 },
+    "Lavanderia": { diurno: 11674.65, nocturno: 13191.07 },
+    "Limpieza": { diurno: 11674.65, nocturno: 13191.07 },
+    "Mantenimiento": { diurno: 11674.65, nocturno: 13191.07 },
+    "Seguridad": { diurno: 13132.44, nocturno: 14838.76 },
+    "Steward": { diurno: 11674.65, nocturno: 13191.07 }
   };
 
   let listaEmpleados = [];
@@ -348,10 +77,10 @@
 
   function crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin, bono) {
     const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin);
-    const tarifa = tarifarioHora[departamento] || { diurno: 13186.91, nocturno: 14878.61 };
+    const tarifa = tarifarioHora[departamento] || { diurno: 11674.65, nocturno: 13191.07 };
 
-    // Fórmula del hotel:
-    // Costo = (Hs Diurnas * Valor Diurno) + (Hs Nocturnas * Valor Nocturno) + (Hs Feriado * Valor Diurno) + Bono
+    // FÓRMULA EXACTA DEL EXCEL:
+    // (Hs Diurnas * Tarifa Diurna) + (Hs Nocturnas * Tarifa Nocturna) + (Hs Feriado * Tarifa Diurna) + Bono
     const costoDiurno = desglose.diurnas * tarifa.diurno;
     const costoNocturno = desglose.nocturnas * tarifa.nocturno;
     const costoFeriado = desglose.feriado * tarifa.diurno; 
@@ -385,28 +114,22 @@
     let nocturnas = 0;
     let feriado = 0;
 
-    // Determinar si el primer o segundo día son feriados (25/12 o 01/01)
-    const esEventoFeriado = evento.includes('25') || evento.includes('01');
-    const esNavidadOAnoNuevo = evento.includes('Navidad') || evento.includes('Nuevo');
+    const esEvento24o31 = evento.includes('Navidad') || evento.includes('Nuevo');
 
     for (let t = tInicio; t < tFin; t += 0.25) {
       let horaDelDia = t % 24;
       let esSegundoDia = t >= 24;
 
-      // Classificar Diurno (06:00 - 21:00) vs Nocturno (21:00 - 06:00)
+      // Evaluar franja Diurna (06:00 - 21:00) vs Nocturna (21:00 - 06:00)
       if (horaDelDia >= 6 && horaDelDia < 21) {
         diurnas += 0.25;
       } else {
         nocturnas += 0.25;
       }
 
-      // Evaluar si ese tramo cae en día feriado (25 o 01)
-      if (esNavidadOAnoNuevo) {
-        if (!esSegundoDia && esEventoFeriado) {
-          feriado += 0.25; // Si la fiesta inicia el día del feriado
-        } else if (esSegundoDia && !esEventoFeriado) {
-          feriado += 0.25; // Si arranca el 24 o 31 y pasa de las 00:00 (entra al 25 o 1)
-        }
+      // Horas feriado: Si arranca el 24 o 31 y pasa de las 00:00 hs (segundo día)
+      if (esSegundoDia) {
+        feriado += 0.25;
       }
     }
 
@@ -444,6 +167,3 @@
       '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 </script>
-
-</body>
-</html>
