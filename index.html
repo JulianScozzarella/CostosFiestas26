@@ -29,7 +29,7 @@
     }
     header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     header h1 {
       color: var(--primary);
@@ -37,18 +37,26 @@
       margin-bottom: 6px;
       font-weight: 600;
     }
+    
+    /* PANEL SUPERIOR FIJO (STICKY) */
+    .sticky-panel {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
     .card {
       background: var(--card-bg);
       border-radius: 12px;
-      padding: 24px;
+      padding: 20px;
       margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       border: 1px solid var(--border);
     }
     .grid-inputs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
+      gap: 12px;
       align-items: end;
     }
     label {
@@ -60,7 +68,7 @@
     }
     select, input {
       width: 100%;
-      padding: 10px;
+      padding: 9px;
       border: 1px solid var(--border);
       border-radius: 8px;
       box-sizing: border-box;
@@ -77,12 +85,12 @@
       background-color: var(--secondary);
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 9px 16px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
       transition: background-color 0.2s;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
     button:hover { background-color: #475569; }
     .btn-masivo { background-color: #6366f1; }
@@ -98,7 +106,7 @@
     }
     th, td {
       border-bottom: 1px solid var(--border);
-      padding: 12px 10px;
+      padding: 10px;
       text-align: left;
     }
     th {
@@ -149,15 +157,15 @@
     .tabs-header {
       display: flex;
       gap: 10px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
+      padding-bottom: 8px;
     }
     .tab-btn {
       background: transparent;
       color: #64748b;
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 6px 14px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
       border: none;
@@ -173,9 +181,14 @@
     .box-preparativos {
       background-color: #fffbeb;
       border: 1px solid #fde68a;
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
-      margin-top: 12px;
+      margin-top: 10px;
+    }
+    .table-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   </style>
 </head>
@@ -186,133 +199,134 @@
     <h1>Planificación de Personal - Eventos de Fin de Año</h1>
   </header>
 
-  <!-- 1. SELECCIÓN DEL EVENTO O PREPARATIVO -->
-  <div class="card">
-    <div class="grid-inputs" style="grid-template-columns: 2fr 1fr;">
-      <div>
-        <label for="tipoCarga" style="font-size: 1rem; color: var(--primary);">Tipo de Asignación:</label>
-        <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
-          <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
-          <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
-        </select>
-      </div>
-      <div>
-        <label for="evento" style="font-size: 1rem; color: var(--primary);">Fiesta Imputada / Evento:</label>
-        <select id="evento" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
-          <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
-            <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
-            <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
-            <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
-          </optgroup>
-          <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
-            <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
-            <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
-          </optgroup>
-          <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
-            <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
-            <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
-            <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
-          </optgroup>
-          <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
-            <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
-            <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
-          </optgroup>
-        </select>
-      </div>
-    </div>
-
-    <!-- CAMPO ADICIONAL PARA FECHA DE PREPARATIVOS -->
-    <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
-      <div class="grid-inputs">
+  <!-- BLOQUE FIJO DE FILTROS Y CARGA (STICKY) -->
+  <div class="sticky-panel">
+    <!-- 1. SELECCIÓN DEL EVENTO O PREPARATIVO -->
+    <div class="card" style="margin-bottom: 10px; padding: 16px;">
+      <div class="grid-inputs" style="grid-template-columns: 2fr 1fr;">
         <div>
-          <label for="fechaPrep">Fecha de Preparativo / Armado:</label>
-          <input type="date" id="fechaPrep" value="2026-12-23">
-        </div>
-        <div>
-          <label for="detallePrep">Detalle de la Tarea:</label>
-          <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. CARGA DE PERSONAL -->
-  <div class="card">
-    <div class="tabs-header">
-      <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
-      <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
-    </div>
-
-    <!-- FORMULARIO MASIVO -->
-    <div id="form-masivo">
-      <h4 style="margin-top:0; color: var(--primary); font-weight: 600;">Agregar grupo de empleados</h4>
-      <div class="grid-inputs">
-        <div>
-          <label for="m_departamento">Departamento / Puesto</label>
-          <select id="m_departamento">
-            <option value="Cocina">Cocina</option>
-            <option value="Banquetes">Banquetes / Camarero</option>
-            <option value="Steward">Steward</option>
-            <option value="Ama de Llaves">Ama de Llaves</option>
-            <option value="Front">Front</option>
-            <option value="Health Club">Health Club</option>
-            <option value="Lavanderia">Lavandería</option>
-            <option value="Limpieza">Limpieza</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Seguridad">Seguridad</option>
+          <label for="tipoCarga" style="font-size: 0.95rem; color: var(--primary);">Tipo de Asignación:</label>
+          <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
+            <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
+            <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
           </select>
         </div>
         <div>
-          <label for="m_cantidad">Cantidad</label>
-          <input type="number" id="m_cantidad" value="1" min="1">
+          <label for="evento" style="font-size: 0.95rem; color: var(--primary);">Fiesta Imputada / Evento:</label>
+          <select id="evento" style="font-weight: 600;">
+            <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
+              <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
+              <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
+              <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
+            </optgroup>
+            <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
+              <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
+              <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
+            </optgroup>
+            <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
+              <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
+              <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
+              <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
+            </optgroup>
+            <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
+              <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
+              <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
+            </optgroup>
+          </select>
         </div>
-        <div>
-          <label for="m_horaInicio">Hora Entrada</label>
-          <input type="time" id="m_horaInicio" value="09:00">
-        </div>
-        <div>
-          <label for="m_horaFin">Hora Salida</label>
-          <input type="time" id="m_horaFin" value="18:00">
-        </div>
-        <div>
-          <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
+      </div>
+
+      <!-- PANEL ADICIONAL PARA PREPARATIVOS -->
+      <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
+        <div class="grid-inputs">
+          <div>
+            <label for="fechaPrep">Fecha de Armado / Preparativo:</label>
+            <input type="date" id="fechaPrep" value="2026-12-23">
+          </div>
+          <div>
+            <label for="detallePrep">Detalle de la Tarea:</label>
+            <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- FORMULARIO INDIVIDUAL -->
-    <div id="form-individual" style="display: none;">
-      <h4 style="margin-top:0; color: var(--primary); font-weight: 600;">Agregar empleado específico</h4>
-      <div class="grid-inputs">
-        <div>
-          <label for="departamento">Departamento / Puesto</label>
-          <select id="departamento">
-            <option value="Cocina">Cocina</option>
-            <option value="Banquetes">Banquetes / Camarero</option>
-            <option value="Steward">Steward</option>
-            <option value="Ama de Llaves">Ama de Llaves</option>
-            <option value="Front">Front</option>
-            <option value="Health Club">Health Club</option>
-            <option value="Lavanderia">Lavandería</option>
-            <option value="Limpieza">Limpieza</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Seguridad">Seguridad</option>
-          </select>
+    <!-- 2. FORMULARIO DE CARGA DE PERSONAL -->
+    <div class="card" style="padding: 16px;">
+      <div class="tabs-header">
+        <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
+        <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
+      </div>
+
+      <!-- FORMULARIO MASIVO -->
+      <div id="form-masivo">
+        <div class="grid-inputs">
+          <div>
+            <label for="m_departamento">Departamento / Puesto</label>
+            <select id="m_departamento">
+              <option value="Cocina">Cocina</option>
+              <option value="Banquetes">Banquetes / Camarero</option>
+              <option value="Steward">Steward</option>
+              <option value="Ama de Llaves">Ama de Llaves</option>
+              <option value="Front">Front</option>
+              <option value="Health Club">Health Club</option>
+              <option value="Lavanderia">Lavandería</option>
+              <option value="Limpieza">Limpieza</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Seguridad">Seguridad</option>
+            </select>
+          </div>
+          <div>
+            <label for="m_cantidad">Cantidad</label>
+            <input type="number" id="m_cantidad" value="1" min="1">
+          </div>
+          <div>
+            <label for="m_horaInicio">Hora Entrada</label>
+            <input type="time" id="m_horaInicio" value="18:00">
+          </div>
+          <div>
+            <label for="m_horaFin">Hora Salida</label>
+            <input type="time" id="m_horaFin" value="03:00">
+          </div>
+          <div>
+            <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
+          </div>
         </div>
-        <div>
-          <label for="nombreEmpl">Nombre Empleado</label>
-          <input type="text" id="nombreEmpl" placeholder="Ej: Chef Ayudante 1">
-        </div>
-        <div>
-          <label for="horaInicio">Hora Entrada</label>
-          <input type="time" id="horaInicio" value="09:00">
-        </div>
-        <div>
-          <label for="horaFin">Hora Salida</label>
-          <input type="time" id="horaFin" value="18:00">
-        </div>
-        <div>
-          <button onclick="agregarIndividual()">+ Guardar Turno</button>
+      </div>
+
+      <!-- FORMULARIO INDIVIDUAL -->
+      <div id="form-individual" style="display: none;">
+        <div class="grid-inputs">
+          <div>
+            <label for="departamento">Departamento / Puesto</label>
+            <select id="departamento">
+              <option value="Cocina">Cocina</option>
+              <option value="Banquetes">Banquetes / Camarero</option>
+              <option value="Steward">Steward</option>
+              <option value="Ama de Llaves">Ama de Llaves</option>
+              <option value="Front">Front</option>
+              <option value="Health Club">Health Club</option>
+              <option value="Lavanderia">Lavandería</option>
+              <option value="Limpieza">Limpieza</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Seguridad">Seguridad</option>
+            </select>
+          </div>
+          <div>
+            <label for="nombreEmpl">Nombre Empleado</label>
+            <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
+          </div>
+          <div>
+            <label for="horaInicio">Hora Entrada</label>
+            <input type="time" id="horaInicio" value="18:00">
+          </div>
+          <div>
+            <label for="horaFin">Hora Salida</label>
+            <input type="time" id="horaFin" value="03:00">
+          </div>
+          <div>
+            <button onclick="agregarIndividual()">+ Guardar Turno</button>
+          </div>
         </div>
       </div>
     </div>
@@ -320,7 +334,10 @@
 
   <!-- 3. TABLA DE DETALLE DE TURNOS -->
   <div class="card">
-    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
+    <div class="table-header-flex">
+      <h3 style="margin: 0; color: var(--primary); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
+      <button class="btn-danger" onclick="borrarTodosLosTurnos()">🗑️ Vaciar Planilla / Borrar Todos</button>
+    </div>
     <table>
       <thead>
         <tr>
@@ -368,7 +385,7 @@
     <div>Costo Total Proyectado: <span id="monto-total">$0.00</span></div>
   </div>
 
-  <!-- 5. HISTORIAL DE PROYECTOS / PRESUPUESTOS GUARDADOS -->
+  <!-- 5. HISTORIAL DE PROYECTOS GUARDADOS -->
   <div class="card" style="margin-top: 24px;">
     <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
     <table>
@@ -485,7 +502,6 @@
     let bonoFiesta = 0;
     const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
     
-    // El bono solo se liquida si es la fiesta misma (no preparativos) y pasa medianoche
     if (!esPreparativo && esCena24o31 && desglose.pasaMedianoche) {
       const horasDesdeLas21 = desglose.horasPost21;
       bonoFiesta = (tarifa.nocturno / 2) * horasDesdeLas21;
@@ -548,7 +564,6 @@
         horasPost21 += 0.25;
       }
 
-      // Horas feriado NO aplican para preparativos
       if (!esPreparativo) {
         if (esCena24o31 && esSegundoDia) feriado += 0.25;
         if (esAlmuerzoFeriado) feriado += 0.25;
@@ -561,6 +576,15 @@
   function eliminarEmpleado(id) {
     listaEmpleados = listaEmpleados.filter(e => e.id !== id);
     actualizarTabla();
+  }
+
+  function borrarTodosLosTurnos() {
+    if (listaEmpleados.length === 0) return;
+    if (confirm("¿Estás seguro de vaciar toda la planilla actual?")) {
+      listaEmpleados = [];
+      contadorPuestos = {};
+      actualizarTabla();
+    }
   }
 
   function actualizarTabla() {
