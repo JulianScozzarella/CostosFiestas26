@@ -38,7 +38,7 @@
     }
     .grid-inputs {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 12px;
       align-items: end;
     }
@@ -66,6 +66,9 @@
     }
     button:hover {
       opacity: 0.9;
+    }
+    .btn-masivo {
+      background-color: #3b82f6;
     }
     table {
       width: 100%;
@@ -102,6 +105,24 @@
       padding: 4px 8px;
       font-size: 0.8rem;
     }
+    .tabs-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .tab-btn {
+      background: #e2e8f0;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      border: none;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -128,42 +149,89 @@
     </select>
   </div>
 
-  <!-- 2. AGREGAR EMPLEADO Y HORARIO -->
+  <!-- 2. MÓDULO DE CARGA (INDIVIDUAL / MASIVA) -->
   <div class="card">
-    <h3>+ Agregar Empleado / Puesto</h3>
-    <div class="grid-inputs">
-      <div>
-        <label for="departamento">Departamento / Puesto</label>
-        <select id="departamento">
-          <option value="Banquetes">Banquetes / Mozo</option>
-          <option value="Cocina">Cocina</option>
-          <option value="Steward">Steward</option>
-          <option value="Ama de Llaves">Ama de Llaves / Limpieza</option>
-          <option value="Front">Front / Recepción</option>
-          <option value="Mantenimiento">Mantenimiento</option>
-          <option value="Seguridad">Seguridad</option>
-        </select>
-      </div>
-      <div>
-        <label for="nombreEmpl">Nombre / Etiqueta</label>
-        <input type="text" id="nombreEmpl" placeholder="Ej: Camarero 1 o Juan Pérez">
-      </div>
-      <div>
-        <label for="horaInicio">Hora Entrada</label>
-        <input type="time" id="horaInicio" value="19:00">
-      </div>
-      <div>
-        <label for="horaFin">Hora Salida</label>
-        <input type="time" id="horaFin" value="03:00">
-      </div>
-      <div>
-        <label for="bono">Bono Fiesta ($)</label>
-        <input type="number" id="bono" value="0" placeholder="0">
-      </div>
-      <div>
-        <button onclick="agregarEmpleado()">+ Guardar Turno</button>
+    <div class="tabs-header">
+      <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
+      <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
+    </div>
+
+    <!-- FORMULARIO CARGA MASIVA -->
+    <div id="form-masivo">
+      <h4 style="margin-top:0; color: var(--primary);">Agregar grupo de empleados con el mismo horario</h4>
+      <div class="grid-inputs">
+        <div>
+          <label for="m_departamento">Departamento / Puesto</label>
+          <select id="m_departamento">
+            <option value="Banquetes">Banquetes / Camarero</option>
+            <option value="Cocina">Cocina</option>
+            <option value="Steward">Steward</option>
+            <option value="Ama de Llaves">Ama de Llaves / Limpieza</option>
+            <option value="Front">Front / Recepción</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
+        </div>
+        <div>
+          <label for="m_cantidad">Cantidad de Personas</label>
+          <input type="number" id="m_cantidad" value="6" min="1" placeholder="Ej: 6">
+        </div>
+        <div>
+          <label for="m_horaInicio">Hora Entrada</label>
+          <input type="time" id="m_horaInicio" value="09:00">
+        </div>
+        <div>
+          <label for="m_horaFin">Hora Salida</label>
+          <input type="time" id="m_horaFin" value="18:00">
+        </div>
+        <div>
+          <label for="m_bono">Bono Fiesta c/u ($)</label>
+          <input type="number" id="m_bono" value="0" placeholder="0">
+        </div>
+        <div>
+          <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
+        </div>
       </div>
     </div>
+
+    <!-- FORMULARIO CARGA INDIVIDUAL -->
+    <div id="form-individual" style="display: none;">
+      <h4 style="margin-top:0; color: var(--primary);">Agregar empleado específico con nombre</h4>
+      <div class="grid-inputs">
+        <div>
+          <label for="departamento">Departamento / Puesto</label>
+          <select id="departamento">
+            <option value="Banquetes">Banquetes / Camarero</option>
+            <option value="Cocina">Cocina</option>
+            <option value="Steward">Steward</option>
+            <option value="Ama de Llaves">Ama de Llaves / Limpieza</option>
+            <option value="Front">Front / Recepción</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
+        </div>
+        <div>
+          <label for="nombreEmpl">Nombre del Empleado</label>
+          <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
+        </div>
+        <div>
+          <label for="horaInicio">Hora Entrada</label>
+          <input type="time" id="horaInicio" value="19:00">
+        </div>
+        <div>
+          <label for="horaFin">Hora Salida</label>
+          <input type="time" id="horaFin" value="03:00">
+        </div>
+        <div>
+          <label for="bono">Bono Fiesta ($)</label>
+          <input type="number" id="bono" value="0" placeholder="0">
+        </div>
+        <div>
+          <button onclick="agregarIndividual()">+ Guardar Turno</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- 3. PLANILLA CON DETALLE Y CÁLCULO DE HORAS -->
@@ -196,7 +264,7 @@
 </div>
 
 <script>
-  // Tarifas por HORA estimadas según tu tabla base (Valor diario / 8 hs)
+  // Tarifas por HORA cargadas desde la tabla base del hotel (Diurno: 06-21 hs | Nocturno: 21-06 hs)
   const tarifarioHora = {
     "Ama de Llaves": { diurno: 1234.25, nocturno: 1394.70 },
     "Banquetes": { diurno: 1394.62, nocturno: 1575.92 },
@@ -210,7 +278,45 @@
   let listaEmpleados = [];
   let contadorPuestos = {};
 
-  function agregarEmpleado() {
+  function mostrarTab(tipo) {
+    if (tipo === 'masivo') {
+      document.getElementById('form-masivo').style.display = 'block';
+      document.getElementById('form-individual').style.display = 'none';
+      document.getElementById('tab-masivo-btn').classList.add('active');
+      document.getElementById('tab-individual-btn').classList.remove('active');
+    } else {
+      document.getElementById('form-masivo').style.display = 'none';
+      document.getElementById('form-individual').style.display = 'block';
+      document.getElementById('tab-masivo-btn').classList.remove('active');
+      document.getElementById('tab-individual-btn').classList.add('active');
+    }
+  }
+
+  // Carga Masiva (Ejemplo: 6 Camareros de 09:00 a 18:00)
+  function agregarMasivo() {
+    const evento = document.getElementById('evento').value;
+    const departamento = document.getElementById('m_departamento').value;
+    const cantidad = parseInt(document.getElementById('m_cantidad').value) || 1;
+    const horaInicio = document.getElementById('m_horaInicio').value;
+    const horaFin = document.getElementById('m_horaFin').value;
+    const bono = parseFloat(document.getElementById('m_bono').value) || 0;
+
+    if (!horaInicio || !horaFin) {
+      alert("Por favor ingresa un horario de entrada y salida.");
+      return;
+    }
+
+    for (let i = 0; i < cantidad; i++) {
+      contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
+      const nombreEtiqueta = `${departamento} ${contadorPuestos[departamento]}`;
+      crearYGuardarEmpleado(evento, departamento, nombreEtiqueta, horaInicio, horaFin, bono);
+    }
+
+    actualizarTabla();
+  }
+
+  // Carga Individual con Nombre Específico
+  function agregarIndividual() {
     const evento = document.getElementById('evento').value;
     const departamento = document.getElementById('departamento').value;
     let nombre = document.getElementById('nombreEmpl').value.trim();
@@ -219,33 +325,33 @@
     const bono = parseFloat(document.getElementById('bono').value) || 0;
 
     if (!horaInicio || !horaFin) {
-      alert("Por favor ingresa un horario de inicio y fin.");
+      alert("Por favor ingresa un horario de entrada y salida.");
       return;
     }
 
-    // Si no le puso nombre, generar "Camarero 1", "Camarero 2", etc.
     if (!nombre) {
       contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
       nombre = `${departamento} ${contadorPuestos[departamento]}`;
     }
 
-    // Cálculo de desglose de horas (Diurno: 06:00 a 21:00 | Nocturno: 21:00 a 06:00)
-    const desglose = calcularDesgloseHoras(horaInicio, horaFin);
+    crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin, bono);
+    document.getElementById('nombreEmpl').value = '';
+    actualizarTabla();
+  }
 
-    // Determinar si aplica recargo por feriado (si el turno cruza al día 25 o al día 1)
+  function crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin, bono) {
+    const desglose = calcularDesgloseHoras(horaInicio, horaFin);
     const esFeriado = checkEsFeriado(evento, horaInicio, horaFin);
     const multiplicadorFeriado = esFeriado ? 2 : 1;
 
-    // Obtener tarifas por hora del departamento
     const tarifa = tarifarioHora[departamento] || { diurno: 1200, nocturno: 1400 };
 
-    // Costo base de las horas trabajadas
     const costoDiurno = desglose.diurnas * tarifa.diurno * multiplicadorFeriado;
     const costoNocturno = desglose.nocturnas * tarifa.nocturno * multiplicadorFeriado;
     const costoTotal = costoDiurno + costoNocturno + bono;
 
     listaEmpleados.push({
-      id: Date.now(),
+      id: Date.now() + Math.random(),
       evento,
       departamento,
       nombre,
@@ -255,10 +361,6 @@
       esFeriado: esFeriado ? 'Sí (100%)' : 'No',
       costoTotal
     });
-
-    // Limpiar input de nombre
-    document.getElementById('nombreEmpl').value = '';
-    actualizarTabla();
   }
 
   function calcularDesgloseHoras(inicio, fin) {
@@ -275,7 +377,7 @@
     let diurnas = 0;
     let nocturnas = 0;
 
-    // Recorrer hora por hora en tramos de 15 mins (0.25h)
+    // Tramo de 15 minutos (0.25h)
     for (let t = tInicio; t < tFin; t += 0.25) {
       let horaDelDia = t % 24;
       // Diurno entre 6 AM (6.0) y 9 PM (21.0)
@@ -290,14 +392,13 @@
   }
 
   function checkEsFeriado(evento, inicio, fin) {
-    // Si la fiesta es el 25/12 o 01/01 es feriado completo
-    // Si es 24/12 o 31/12 y el turno pasa de las 00:00 hs, las horas pasadas la medianoche son feriado
     let [h1] = inicio.split(':').map(Number);
     let [h2] = fin.split(':').map(Number);
     
-    if (h2 < h1 || h2 === 0) { // Cruza la medianoche
-      return true; 
-    }
+    // Si la fiesta es el 25/12 o 01/01 o si pasa de la medianoche
+    if (evento.includes('25') || evento.includes('01')) return true;
+    if (h2 < h1 || h2 === 0) return true; 
+    
     return false;
   }
 
