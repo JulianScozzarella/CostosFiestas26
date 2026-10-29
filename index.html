@@ -170,6 +170,13 @@
       display: flex;
       gap: 6px;
     }
+    .box-preparativos {
+      background-color: #fffbeb;
+      border: 1px solid #fde68a;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
   </style>
 </head>
 <body>
@@ -179,37 +186,54 @@
     <h1>Planificación de Personal - Eventos de Fin de Año</h1>
   </header>
 
-  <!-- 1. SELECCIÓN DEL EVENTO / PREPARATIVOS -->
+  <!-- 1. SELECCIÓN DEL EVENTO O PREPARATIVO -->
   <div class="card">
-    <label for="evento" style="font-size: 1rem; color: var(--primary);">Seleccionar Fiesta, Evento o Fase de Preparativos:</label>
-    <select id="evento" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
-      <optgroup label="👨‍🍳 Preparativos Previos (Mise en place / Armado)">
-        <option value="Preparativos - Cocina (22 Dec)">Cocina - Preparativos 22 Diciembre</option>
-        <option value="Preparativos - Cocina (23 Dec)">Cocina - Preparativos 23 Diciembre</option>
-        <option value="Preparativos - Salones/Montaje (23 Dec)">Salones / Montaje - Preparativos 23 Diciembre</option>
-        <option value="Preparativos - Cocina (29 Dec)">Cocina - Preparativos 29 Diciembre</option>
-        <option value="Preparativos - Cocina (30 Dec)">Cocina - Preparativos 30 Diciembre</option>
-        <option value="Preparativos - Salones/Montaje (30 Dec)">Salones / Montaje - Preparativos 30 Diciembre</option>
-      </optgroup>
-      <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
-        <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
-        <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
-        <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
-      </optgroup>
-      <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
-        <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
-        <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
-      </optgroup>
-      <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
-        <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
-        <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
-        <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
-      </optgroup>
-      <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
-        <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
-        <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
-      </optgroup>
-    </select>
+    <div class="grid-inputs" style="grid-template-columns: 2fr 1fr;">
+      <div>
+        <label for="tipoCarga" style="font-size: 1rem; color: var(--primary);">Tipo de Asignación:</label>
+        <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
+          <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
+          <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
+        </select>
+      </div>
+      <div>
+        <label for="evento" style="font-size: 1rem; color: var(--primary);">Fiesta Imputada / Evento:</label>
+        <select id="evento" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
+          <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
+            <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
+            <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
+            <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
+          </optgroup>
+          <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
+            <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
+            <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
+          </optgroup>
+          <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
+            <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
+            <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
+            <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
+          </optgroup>
+          <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
+            <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
+            <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <!-- CAMPO ADICIONAL PARA FECHA DE PREPARATIVOS -->
+    <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
+      <div class="grid-inputs">
+        <div>
+          <label for="fechaPrep">Fecha de Preparativo / Armado:</label>
+          <input type="date" id="fechaPrep" value="2026-12-23">
+        </div>
+        <div>
+          <label for="detallePrep">Detalle de la Tarea:</label>
+          <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- 2. CARGA DE PERSONAL -->
@@ -294,13 +318,14 @@
     </div>
   </div>
 
-  <!-- 3. TABLA DE DETALLE -->
+  <!-- 3. TABLA DE DETALLE DE TURNOS -->
   <div class="card">
-    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">Detalle de Empleados Asignados</h3>
+    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
     <table>
       <thead>
         <tr>
-          <th>Evento / Fase</th>
+          <th>Fiesta Imputada</th>
+          <th>Tipo / Fecha</th>
           <th>Puesto</th>
           <th>Empleado</th>
           <th>Horario</th>
@@ -318,13 +343,32 @@
     </table>
   </div>
 
+  <!-- 4. TABLA CONSOLIDADA POR FIESTA (RESUMEN GERENCIAL) -->
+  <div class="card">
+    <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📊 Resumen Consolidado de Costos por Fiesta</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Fiesta / Evento</th>
+          <th>Cant. Personal Total</th>
+          <th>Costo Evento Principal</th>
+          <th>Costo Preparativos</th>
+          <th>Costo Total Consolidado</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-consolidado">
+        <!-- Consolidado dinámico -->
+      </tbody>
+    </table>
+  </div>
+
   <!-- RESUMEN TOTAL Y BOTÓN DE GUARDAR -->
   <div class="total-box">
     <button class="btn-guardar" onclick="guardarPresupuesto()">💾 Guardar Este Presupuesto</button>
     <div>Costo Total Proyectado: <span id="monto-total">$0.00</span></div>
   </div>
 
-  <!-- 4. HISTORIAL DE PROYECTOS / PRESUPUESTOS GUARDADOS -->
+  <!-- 5. HISTORIAL DE PROYECTOS / PRESUPUESTOS GUARDADOS -->
   <div class="card" style="margin-top: 24px;">
     <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
     <table>
@@ -365,6 +409,12 @@
     cargarProyectosGuardadosUI();
   };
 
+  function toggleModoPreparativos() {
+    const tipoCarga = document.getElementById('tipoCarga').value;
+    const panel = document.getElementById('panelFechaPrep');
+    panel.style.display = tipoCarga === 'Preparativo' ? 'block' : 'none';
+  }
+
   function mostrarTab(tipo) {
     if (tipo === 'masivo') {
       document.getElementById('form-masivo').style.display = 'block';
@@ -380,6 +430,7 @@
   }
 
   function agregarMasivo() {
+    const tipoCarga = document.getElementById('tipoCarga').value;
     const evento = document.getElementById('evento').value;
     const departamento = document.getElementById('m_departamento').value;
     const cantidad = parseInt(document.getElementById('m_cantidad').value) || 1;
@@ -394,13 +445,14 @@
     for (let i = 0; i < cantidad; i++) {
       contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
       const nombreEtiqueta = `${departamento} ${contadorPuestos[departamento]}`;
-      crearYGuardarEmpleado(evento, departamento, nombreEtiqueta, horaInicio, horaFin);
+      crearYGuardarEmpleado(tipoCarga, evento, departamento, nombreEtiqueta, horaInicio, horaFin);
     }
 
     actualizarTabla();
   }
 
   function agregarIndividual() {
+    const tipoCarga = document.getElementById('tipoCarga').value;
     const evento = document.getElementById('evento').value;
     const departamento = document.getElementById('departamento').value;
     let nombre = document.getElementById('nombreEmpl').value.trim();
@@ -417,20 +469,24 @@
       nombre = `${departamento} ${contadorPuestos[departamento]}`;
     }
 
-    crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin);
+    crearYGuardarEmpleado(tipoCarga, evento, departamento, nombre, horaInicio, horaFin);
     document.getElementById('nombreEmpl').value = '';
     actualizarTabla();
   }
 
-  function crearYGuardarEmpleado(evento, departamento, nombre, horaInicio, horaFin) {
-    const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin);
+  function crearYGuardarEmpleado(tipoCarga, evento, departamento, nombre, horaInicio, horaFin) {
+    const esPreparativo = tipoCarga === 'Preparativo';
+    const fechaPrep = esPreparativo ? document.getElementById('fechaPrep').value : '';
+    const detallePrep = esPreparativo ? (document.getElementById('detallePrep').value || 'Preparativos') : '';
+
+    const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin, esPreparativo);
     const tarifa = tarifarioHora[departamento] || { diurno: 11674.65, nocturno: 13191.07 };
 
-    // Bono de Fiesta: Solo para cenas del 24 o 31 que pasan de medianoche (No aplica a preparativos)
     let bonoFiesta = 0;
     const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
     
-    if (esCena24o31 && desglose.pasaMedianoche && !evento.includes('Preparativos')) {
+    // El bono solo se liquida si es la fiesta misma (no preparativos) y pasa medianoche
+    if (!esPreparativo && esCena24o31 && desglose.pasaMedianoche) {
       const horasDesdeLas21 = desglose.horasPost21;
       bonoFiesta = (tarifa.nocturno / 2) * horasDesdeLas21;
     }
@@ -443,19 +499,21 @@
     listaEmpleados.push({
       id: Date.now() + Math.random(),
       evento,
+      tipoCarga,
+      infoTipo: esPreparativo ? `🛠️ Prep (${fechaPrep})` : '🎉 Fiesta',
       departamento,
-      nombre,
+      nombre: esPreparativo ? `${nombre} [${detallePrep}]` : nombre,
       horario: `${horaInicio} a ${horaFin}`,
       horasDiurnas: desglose.diurnas.toFixed(1),
       horasNocturnas: desglose.nocturnas.toFixed(1),
       horasFeriado: desglose.feriado.toFixed(1),
       bonoFiesta,
       costoTotal,
-      esPreparativo: evento.includes('Preparativos')
+      esPreparativo
     });
   }
 
-  function calcularDesgloseExacto(evento, inicio, fin) {
+  function calcularDesgloseExacto(evento, inicio, fin, esPreparativo) {
     let [h1, m1] = inicio.split(':').map(Number);
     let [h2, m2] = fin.split(':').map(Number);
 
@@ -473,7 +531,6 @@
     let feriado = 0;
     let horasPost21 = 0;
 
-    const esPreparativo = evento.includes('Preparativos');
     const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
     const esAlmuerzoFeriado = evento.includes('25 Dec') || evento.includes('1 Jan');
 
@@ -491,14 +548,10 @@
         horasPost21 += 0.25;
       }
 
-      // Los preparativos no liquidan horas de feriado
+      // Horas feriado NO aplican para preparativos
       if (!esPreparativo) {
-        if (esCena24o31 && esSegundoDia) {
-          feriado += 0.25;
-        }
-        if (esAlmuerzoFeriado) {
-          feriado += 0.25;
-        }
+        if (esCena24o31 && esSegundoDia) feriado += 0.25;
+        if (esAlmuerzoFeriado) feriado += 0.25;
       }
     }
 
@@ -521,9 +574,10 @@
       const badgeClass = e.esPreparativo ? 'badge-prep' : 'badge';
       
       tr.innerHTML = `
-        <td><span class="${badgeClass}">${e.evento}</span></td>
+        <td><strong>${e.evento}</strong></td>
+        <td><span class="${badgeClass}">${e.infoTipo}</span></td>
         <td>${e.departamento}</td>
-        <td><strong>${e.nombre}</strong></td>
+        <td>${e.nombre}</td>
         <td>${e.horario}</td>
         <td>${e.horasDiurnas} hs</td>
         <td>${e.horasNocturnas} hs</td>
@@ -537,7 +591,48 @@
 
     document.getElementById('monto-total').innerText = 
       '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    actualizarConsolidadoPorFiesta();
   }
+
+  function actualizarConsolidadoPorFiesta() {
+    const tbodyCons = document.getElementById('tabla-consolidado');
+    tbodyCons.innerHTML = '';
+
+    const consolidado = {};
+
+    listaEmpleados.forEach(e => {
+      if (!consolidado[e.evento]) {
+        consolidado[e.evento] = { personas: 0, costoFiesta: 0, costoPrep: 0, total: 0 };
+      }
+      consolidado[e.evento].personas += 1;
+      if (e.esPreparativo) {
+        consolidado[e.evento].costoPrep += e.costoTotal;
+      } else {
+        consolidado[e.evento].costoFiesta += e.costoTotal;
+      }
+      consolidado[e.evento].total += e.costoTotal;
+    });
+
+    if (Object.keys(consolidado).length === 0) {
+      tbodyCons.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">No hay datos cargados para consolidar.</td></tr>`;
+      return;
+    }
+
+    for (const [evento, data] of Object.entries(consolidado)) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="badge">${evento}</span></td>
+        <td>${data.personas} pers.</td>
+        <td>$${data.costoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td>$${data.costoPrep.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td><strong>$${data.total.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></td>
+      `;
+      tbodyCons.appendChild(tr);
+    }
+  }
+
+  // --- ALMACENAMIENTO LOCAL (LOCALSTORAGE) ---
 
   function guardarPresupuesto() {
     if (listaEmpleados.length === 0) {
