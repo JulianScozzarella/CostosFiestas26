@@ -185,6 +185,12 @@
       border-radius: 8px;
       margin-top: 10px;
     }
+    .box-aumento {
+      background-color: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 10px;
+      border-radius: 8px;
+    }
     .table-header-flex {
       display: flex;
       justify-content: space-between;
@@ -201,9 +207,9 @@
 
   <!-- BLOQUE FIJO DE FILTROS Y CARGA (STICKY) -->
   <div class="sticky-panel">
-    <!-- 1. SELECCIÓN DEL EVENTO O PREPARATIVO -->
+    <!-- 1. SELECCIÓN DEL EVENTO, PREPARATIVO E INCREMENTO -->
     <div class="card" style="margin-bottom: 10px; padding: 16px;">
-      <div class="grid-inputs" style="grid-template-columns: 2fr 1fr;">
+      <div class="grid-inputs" style="grid-template-columns: 2fr 2fr 1fr;">
         <div>
           <label for="tipoCarga" style="font-size: 0.95rem; color: var(--primary);">Tipo de Asignación:</label>
           <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
@@ -233,6 +239,12 @@
               <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
             </optgroup>
           </select>
+        </div>
+
+        <!-- RECUADRO DE INCREMENTO SALARIAL PROYECTADO (%) -->
+        <div class="box-aumento">
+          <label for="porcentajeAumento" style="color: #065f46; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+          <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #a7f3d0; background-color: #ffffff;">
         </div>
       </div>
 
@@ -406,7 +418,8 @@
 </div>
 
 <script>
-  const tarifarioHora = {
+  // Tarifas base por hora según la planilla del hotel (Columnas K y L)
+  const tarifarioBase = {
     "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
     "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
     "Cocina": { diurno: 14240.54, nocturno: 16091.10 },
@@ -496,22 +509,6 @@
     const fechaPrep = esPreparativo ? document.getElementById('fechaPrep').value : '';
     const detallePrep = esPreparativo ? (document.getElementById('detallePrep').value || 'Preparativos') : '';
 
-    const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin, esPreparativo);
-    const tarifa = tarifarioHora[departamento] || { diurno: 11674.65, nocturno: 13191.07 };
-
-    let bonoFiesta = 0;
-    const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
-    
-    if (!esPreparativo && esCena24o31 && desglose.pasaMedianoche) {
-      const horasDesdeLas21 = desglose.horasPost21;
-      bonoFiesta = (tarifa.nocturno / 2) * horasDesdeLas21;
-    }
-
-    const costoDiurno = desglose.diurnas * tarifa.diurno;
-    const costoNocturno = desglose.nocturnas * tarifa.nocturno;
-    const costoFeriado = desglose.feriado * tarifa.diurno; 
-    const costoTotal = costoDiurno + costoNocturno + costoFeriado + bonoFiesta;
-
     listaEmpleados.push({
       id: Date.now() + Math.random(),
       evento,
@@ -519,14 +516,47 @@
       infoTipo: esPreparativo ? `🛠️ Prep (${fechaPrep})` : '🎉 Fiesta',
       departamento,
       nombre: esPreparativo ? `${nombre} [${detallePrep}]` : nombre,
+      horaInicio,
+      horaFin,
       horario: `${horaInicio} a ${horaFin}`,
+      esPreparativo
+    });
+  }
+
+  function recalcularAumentoGlobal() {
+    actualizarTabla();
+  }
+
+  function calcularMontoEmpleado(e) {
+    const pctAumento = (parseFloat(document.getElementById('porcentajeAumento').value) || 0) / 100;
+    const tarifaBase = tarifarioBase[e.departamento] || { diurno: 11674.65, nocturno: 13191.07 };
+
+    // Aplicar porcentaje de incremento a las tarifas
+    const tarifaDiurna = tarifaBase.diurno * (1 + pctAumento);
+    const tarifaNocturna = tarifaBase.nocturno * (1 + pctAumento);
+
+    const desglose = calcularDesgloseExacto(e.evento, e.horaInicio, e.horaFin, e.esPreparativo);
+
+    let bonoFiesta = 0;
+    const esCena24o31 = e.evento.includes('24 Dec') || e.evento.includes('31 Dec');
+    
+    if (!e.esPreparativo && esCena24o31 && desglose.pasaMedianoche) {
+      const horasDesdeLas21 = desglose.horasPost21;
+      bonoFiesta = (tarifaNocturna / 2) * horasDesdeLas21;
+    }
+
+    const costoDiurno = desglose.diurnas * tarifaDiurna;
+    const costoNocturno = desglose.nocturnas * tarifaNocturna;
+    const costoFeriado = desglose.feriado * tarifaDiurna; 
+    const costoTotal = costoDiurno + costoNocturno + costoFeriado + bonoFiesta;
+
+    return {
       horasDiurnas: desglose.diurnas.toFixed(1),
       horasNocturnas: desglose.nocturnas.toFixed(1),
       horasFeriado: desglose.feriado.toFixed(1),
       bonoFiesta,
-      costoTotal,
-      esPreparativo
-    });
+      costoTotal
+    };
   }
 
   function calcularDesgloseExacto(evento, inicio, fin, esPreparativo) {
@@ -593,7 +623,11 @@
     let totalGeneral = 0;
 
     listaEmpleados.forEach(e => {
-      totalGeneral += e.costoTotal;
+      const calc = calcularMontoEmpleado(e);
+      e.costoCalculado = calc.costoTotal; // Guardar valor para consolidado
+      e.bonoCalculado = calc.bonoFiesta;
+
+      totalGeneral += calc.costoTotal;
       const tr = document.createElement('tr');
       const badgeClass = e.esPreparativo ? 'badge-prep' : 'badge';
       
@@ -603,11 +637,11 @@
         <td>${e.departamento}</td>
         <td>${e.nombre}</td>
         <td>${e.horario}</td>
-        <td>${e.horasDiurnas} hs</td>
-        <td>${e.horasNocturnas} hs</td>
-        <td>${e.horasFeriado} hs</td>
-        <td>$${e.bonoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        <td>$${e.costoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td>${calc.horasDiurnas} hs</td>
+        <td>${calc.horasNocturnas} hs</td>
+        <td>${calc.horasFeriado} hs</td>
+        <td>$${calc.bonoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        <td>$${calc.costoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
         <td><button class="btn-danger" onclick="eliminarEmpleado(${e.id})">x</button></td>
       `;
       tbody.appendChild(tr);
@@ -630,12 +664,14 @@
         consolidado[e.evento] = { personas: 0, costoFiesta: 0, costoPrep: 0, total: 0 };
       }
       consolidado[e.evento].personas += 1;
+      const costo = e.costoCalculado || 0;
+
       if (e.esPreparativo) {
-        consolidado[e.evento].costoPrep += e.costoTotal;
+        consolidado[e.evento].costoPrep += costo;
       } else {
-        consolidado[e.evento].costoFiesta += e.costoTotal;
+        consolidado[e.evento].costoFiesta += costo;
       }
-      consolidado[e.evento].total += e.costoTotal;
+      consolidado[e.evento].total += costo;
     });
 
     if (Object.keys(consolidado).length === 0) {
@@ -664,17 +700,19 @@
       return;
     }
 
-    const nombre = prompt("Ingresa un nombre para este proyecto / presupuesto:", "Presupuesto Eventos - " + new Date().toLocaleDateString('es-AR'));
+    const pct = document.getElementById('porcentajeAumento').value || "0";
+    const nombre = prompt("Ingresa un nombre para este proyecto / presupuesto:", `Presupuesto Eventos (+${pct}%) - ` + new Date().toLocaleDateString('es-AR'));
     if (!nombre) return;
 
     const proyectosGuardados = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
-    let totalMonto = listaEmpleados.reduce((acc, e) => acc + e.costoTotal, 0);
+    let totalMonto = listaEmpleados.reduce((acc, e) => acc + (e.costoCalculado || 0), 0);
 
     const nuevoProyecto = {
       id: Date.now(),
       nombre,
       fecha: new Date().toLocaleString('es-AR'),
       cantEmpleados: listaEmpleados.length,
+      porcentajeAplicado: pct,
       totalMonto,
       datos: [...listaEmpleados]
     };
@@ -717,6 +755,9 @@
     const proj = proyectos.find(p => p.id === id);
     if (proj) {
       listaEmpleados = [...proj.datos];
+      if (proj.porcentajeAplicado !== undefined) {
+        document.getElementById('porcentajeAumento').value = proj.porcentajeAplicado;
+      }
       actualizarTabla();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
