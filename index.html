@@ -114,6 +114,14 @@
       font-size: 0.8rem;
       font-weight: 500;
     }
+    .badge-prep {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
     .total-box {
       background-color: #f1f5f9;
       border: 1px solid var(--border);
@@ -171,10 +179,18 @@
     <h1>Planificación de Personal - Eventos de Fin de Año</h1>
   </header>
 
-  <!-- 1. SELECCIÓN DEL EVENTO -->
+  <!-- 1. SELECCIÓN DEL EVENTO / PREPARATIVOS -->
   <div class="card">
-    <label for="evento" style="font-size: 1rem; color: var(--primary);">Seleccionar Fiesta / Evento:</label>
+    <label for="evento" style="font-size: 1rem; color: var(--primary);">Seleccionar Fiesta, Evento o Fase de Preparativos:</label>
     <select id="evento" style="font-size: 0.95rem; font-weight: 600; padding: 12px;">
+      <optgroup label="👨‍🍳 Preparativos Previos (Mise en place / Armado)">
+        <option value="Preparativos - Cocina (22 Dec)">Cocina - Preparativos 22 Diciembre</option>
+        <option value="Preparativos - Cocina (23 Dec)">Cocina - Preparativos 23 Diciembre</option>
+        <option value="Preparativos - Salones/Montaje (23 Dec)">Salones / Montaje - Preparativos 23 Diciembre</option>
+        <option value="Preparativos - Cocina (29 Dec)">Cocina - Preparativos 29 Diciembre</option>
+        <option value="Preparativos - Cocina (30 Dec)">Cocina - Preparativos 30 Diciembre</option>
+        <option value="Preparativos - Salones/Montaje (30 Dec)">Salones / Montaje - Preparativos 30 Diciembre</option>
+      </optgroup>
       <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
         <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
         <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
@@ -210,8 +226,8 @@
         <div>
           <label for="m_departamento">Departamento / Puesto</label>
           <select id="m_departamento">
-            <option value="Banquetes">Banquetes / Camarero</option>
             <option value="Cocina">Cocina</option>
+            <option value="Banquetes">Banquetes / Camarero</option>
             <option value="Steward">Steward</option>
             <option value="Ama de Llaves">Ama de Llaves</option>
             <option value="Front">Front</option>
@@ -228,11 +244,11 @@
         </div>
         <div>
           <label for="m_horaInicio">Hora Entrada</label>
-          <input type="time" id="m_horaInicio" value="18:00">
+          <input type="time" id="m_horaInicio" value="09:00">
         </div>
         <div>
           <label for="m_horaFin">Hora Salida</label>
-          <input type="time" id="m_horaFin" value="03:00">
+          <input type="time" id="m_horaFin" value="18:00">
         </div>
         <div>
           <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
@@ -247,8 +263,8 @@
         <div>
           <label for="departamento">Departamento / Puesto</label>
           <select id="departamento">
-            <option value="Banquetes">Banquetes / Camarero</option>
             <option value="Cocina">Cocina</option>
+            <option value="Banquetes">Banquetes / Camarero</option>
             <option value="Steward">Steward</option>
             <option value="Ama de Llaves">Ama de Llaves</option>
             <option value="Front">Front</option>
@@ -261,15 +277,15 @@
         </div>
         <div>
           <label for="nombreEmpl">Nombre Empleado</label>
-          <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
+          <input type="text" id="nombreEmpl" placeholder="Ej: Chef Ayudante 1">
         </div>
         <div>
           <label for="horaInicio">Hora Entrada</label>
-          <input type="time" id="horaInicio" value="18:00">
+          <input type="time" id="horaInicio" value="09:00">
         </div>
         <div>
           <label for="horaFin">Hora Salida</label>
-          <input type="time" id="horaFin" value="03:00">
+          <input type="time" id="horaFin" value="18:00">
         </div>
         <div>
           <button onclick="agregarIndividual()">+ Guardar Turno</button>
@@ -284,7 +300,7 @@
     <table>
       <thead>
         <tr>
-          <th>Evento</th>
+          <th>Evento / Fase</th>
           <th>Puesto</th>
           <th>Empleado</th>
           <th>Horario</th>
@@ -329,7 +345,6 @@
 </div>
 
 <script>
-  // Tarifas por hora según la planilla del hotel (Columnas K y L)
   const tarifarioHora = {
     "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
     "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
@@ -411,13 +426,11 @@
     const desglose = calcularDesgloseExacto(evento, horaInicio, horaFin);
     const tarifa = tarifarioHora[departamento] || { diurno: 11674.65, nocturno: 13191.07 };
 
-    // LÓGICA AUTOMÁTICA DEL BONO DE FIESTA:
-    // Aplica si es Nochebuena (24 Dec) o Fin de Año (31 Dec) y el empleado sale después de las 00:00 hs.
-    // Cálculo: (Costo Empresa Nocturno / 2) * Horas desde las 21:00 hs hasta egreso.
+    // Bono de Fiesta: Solo para cenas del 24 o 31 que pasan de medianoche (No aplica a preparativos)
     let bonoFiesta = 0;
     const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
     
-    if (esCena24o31 && desglose.pasaMedianoche) {
+    if (esCena24o31 && desglose.pasaMedianoche && !evento.includes('Preparativos')) {
       const horasDesdeLas21 = desglose.horasPost21;
       bonoFiesta = (tarifa.nocturno / 2) * horasDesdeLas21;
     }
@@ -437,7 +450,8 @@
       horasNocturnas: desglose.nocturnas.toFixed(1),
       horasFeriado: desglose.feriado.toFixed(1),
       bonoFiesta,
-      costoTotal
+      costoTotal,
+      esPreparativo: evento.includes('Preparativos')
     });
   }
 
@@ -450,7 +464,7 @@
 
     let pasaMedianoche = false;
     if (tFin <= tInicio) {
-      tFin += 24; // Pasa la medianoche (salida al día siguiente)
+      tFin += 24;
       pasaMedianoche = true;
     }
 
@@ -459,6 +473,7 @@
     let feriado = 0;
     let horasPost21 = 0;
 
+    const esPreparativo = evento.includes('Preparativos');
     const esCena24o31 = evento.includes('24 Dec') || evento.includes('31 Dec');
     const esAlmuerzoFeriado = evento.includes('25 Dec') || evento.includes('1 Jan');
 
@@ -466,24 +481,24 @@
       let horaDelDia = t % 24;
       let esSegundoDia = t >= 24;
 
-      // Horas Diurnas (06:00 a 21:00) vs Nocturnas (21:00 a 06:00)
       if (horaDelDia >= 6 && horaDelDia < 21) {
         diurnas += 0.25;
       } else {
         nocturnas += 0.25;
       }
 
-      // Horas desde las 21:00 hs para el Bono de Fiesta
       if (t >= 21) {
         horasPost21 += 0.25;
       }
 
-      // Horas Feriado:
-      if (esCena24o31 && esSegundoDia) {
-        feriado += 0.25;
-      }
-      if (esAlmuerzoFeriado) {
-        feriado += 0.25;
+      // Los preparativos no liquidan horas de feriado
+      if (!esPreparativo) {
+        if (esCena24o31 && esSegundoDia) {
+          feriado += 0.25;
+        }
+        if (esAlmuerzoFeriado) {
+          feriado += 0.25;
+        }
       }
     }
 
@@ -503,8 +518,10 @@
     listaEmpleados.forEach(e => {
       totalGeneral += e.costoTotal;
       const tr = document.createElement('tr');
+      const badgeClass = e.esPreparativo ? 'badge-prep' : 'badge';
+      
       tr.innerHTML = `
-        <td><span class="badge">${e.evento}</span></td>
+        <td><span class="${badgeClass}">${e.evento}</span></td>
         <td>${e.departamento}</td>
         <td><strong>${e.nombre}</strong></td>
         <td>${e.horario}</td>
@@ -521,8 +538,6 @@
     document.getElementById('monto-total').innerText = 
       '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
-
-  // --- ALMACENAMIENTO LOCAL (LOCALSTORAGE) ---
 
   function guardarPresupuesto() {
     if (listaEmpleados.length === 0) {
