@@ -546,6 +546,19 @@
             "Steward": { diurno: 11674.65, nocturno: 13191.07 }
         };
 
+        const siglasDept = {
+            "Cocina": "COC",
+            "Banquetes": "BAN",
+            "Steward": "STE",
+            "Ama de Llaves": "A-LL",
+            "Front": "FRN",
+            "Health Club": "HCL",
+            "Lavanderia": "LAV",
+            "Limpieza": "LIM",
+            "Mantenimiento": "MNT",
+            "Seguridad": "SEG"
+        };
+
         let listaEmpleados = [];
         let contadorPuestos = {};
         let moduloActivo = 'fiestas';
@@ -843,16 +856,15 @@
             }
         }
 
-        // --- EXPORTAR A GOOGLE DRIVE / EXCEL (MATRIZ DE HORARIOS HORIZONTAL CORREGIDA) ---
+        // --- EXPORTAR A GOOGLE DRIVE / EXCEL (NUEVO MOTOR EN MINUTOS ABSOLUTOS + TOTALES) ---
         function exportarMatrizHorariosCSV() {
             if (listaEmpleados.length === 0) {
                 alert("No hay turnos cargados para exportar.");
                 return;
             }
 
-            // 1. Obtener eventos disponibles para filtrar si se desea
+            // 1. Filtrado de Eventos
             const eventos = [...new Set(listaEmpleados.map(e => e.evento))];
-            
             const eventoSeleccionado = prompt(
                 "Ingresá el nombre del evento a exportar (o dejá en blanco para exportar TODOS los eventos):\n\nEventos disponibles:\n- " + eventos.join("\n- "),
                 ""
@@ -870,58 +882,59 @@
                 return;
             }
 
-            // 2. Crear los bloques de horario (de 06:00 AM a 05:30 AM del día siguiente, intervalos de 30 min)
+            // Helper: Convertir 'HH:MM' a minutos transcurridos desde las 06:00 AM del día del evento (0 a 1440 min)
+            function horaAMinutosAbsolutos(horaStr) {
+                let [h, m] = horaStr.split(':').map(Number);
+                let min = h * 60 + m;
+                // El ciclo diario arranca a las 06:00 AM (360 min)
+                if (min < 360) {
+                    min += 1440; // Pertenece a la madrugada siguiente
+                }
+                return min;
+            }
+
+            // 2. Generar bloques de tiempo (intervalos de 30 min desde las 06:00 AM a las 05:30 AM siguiente)
             const bloquesHorarios = [];
-            for (let h = 6; h < 30; h += 0.5) {
-                const horaEntera = Math.floor(h % 24).toString().padStart(2, '0');
-                const minutos = (h % 1 === 0) ? '00' : '30';
+            for (let min = 360; min < 1800; min += 30) {
+                let horaEntera = Math.floor((min % 1440) / 60).toString().padStart(2, '0');
+                let minutosStr = ((min % 60) === 0) ? '00' : '30';
                 bloquesHorarios.push({
-                    label: `${horaEntera}:${minutos}`,
-                    valorDecimal: h
+                    label: `${horaEntera}:${minutosStr}`,
+                    minInicio: min,
+                    minFin: min + 30
                 });
             }
 
-            // 3. Encabezados del CSV
-            let csvContent = "\uFEFF"; // UTF-8 BOM para soporte de tildes en Excel / Drive
-            
-            let filaEncabezado = "EVENTO / FIESTA;DEPARTAMENTO;EMPLEADO;";
-            bloquesHorarios.forEach(bloque => {
-                filaEncabezado += `"${bloque.label}";`;
+            // 3. Encabezados del CSV (Incluyen resumen de horas totales y franja horaria)
+            let csvContent = "\uFEFF"; // UTF-8 BOM
+            let filaEncabezado = "EVENTO / FIESTA;DEPARTAMENTO;EMPLEADO;INICIO;FIN;HS TOTALES;";
+            bloquesHorarios.forEach(b => {
+                filaEncabezado += `"${b.label}";`;
             });
             csvContent += filaEncabezado + "\n";
 
-            // 4. Filas: Evaluamos con precisión la franja horaria de cada empleado
+            // Arreglo para contabilizar la cantidad de personal activo en cada columna/bloque
+            let conteoPorBloque = new Array(bloquesHorarios.length).fill(0);
+
+            // 4. Filas por empleado
             empleadosFiltrados.forEach(e => {
-                let filaEmpleado = `"${e.evento}";"${e.departamento}";"${e.nombre}";`;
+                let minInicioEmp = horaAMinutosAbsolutos(e.horaInicio);
+                let minFinEmp = horaAMinutosAbsolutos(e.horaFin);
 
-                let [h1, m1] = e.horaInicio.split(':').map(Number);
-                let [h2, m2] = e.horaFin.split(':').map(Number);
-
-                let tInicio = h1 + m1 / 60;
-                let tFin = h2 + m2 / 60;
-
-                // Si la hora de inicio es anterior a las 06:00 AM (ej: 02:00), pertenece al ciclo nocturno (suma 24h)
-                if (tInicio < 6) {
-                    tInicio += 24;
+                if (minFinEmp <= minInicioEmp) {
+                    minFinEmp += 1440;
                 }
 
-                // Si la hora de fin es menor o igual a la de inicio, cruza la medianoche
-                if (tFin <= tInicio) {
-                    tFin += 24;
-                }
+                let duracionHs = ((minFinEmp - minInicioEmp) / 60).toFixed(1);
+                let sigla = siglasDept[e.departamento] || "EMP";
 
-                // Recorrer cada columna de hora y verificar si el empleado está en turno
-                bloquesHorarios.forEach(bloque => {
-                    let tBloque = bloque.valorDecimal;
+                let filaEmpleado = `"${e.evento}";"${e.departamento}";"${e.nombre}";"${e.horaInicio}";"${e.horaFin}";"${duracionHs} hs";`;
 
-                    // Si el turno empezó temprano (ej: 16:00) y el bloque es de madrugada (ej: 01:00 = 25.0),
-                    // se ajusta el bloque si es necesario para comparar contra la misma escala.
-                    if (tBloque < tInicio && (tBloque + 24) < tFin) {
-                        tBloque += 24;
-                    }
-
-                    if (tBloque >= tInicio && tBloque < tFin) {
-                        filaEmpleado += `"X";`;
+                bloquesHorarios.forEach((b, idx) => {
+                    // Si el bloque está dentro del turno del empleado
+                    if (b.minInicio >= minInicioEmp && b.minFin <= minFinEmp) {
+                        filaEmpleado += `"${sigla}";`;
+                        conteoPorBloque[idx]++;
                     } else {
                         filaEmpleado += `";`;
                     }
@@ -930,7 +943,14 @@
                 csvContent += filaEmpleado + "\n";
             });
 
-            // 5. Descargar el archivo CSV
+            // 5. Fila de Totalización: Personal activo por cada rango de 30 minutos
+            let filaTotales = `"RESUMEN COBERTURA";"TOTALES";"PERSONAL ACTIVO EN EL BLOQUE";"-";"-";"-";`;
+            conteoPorBloque.forEach(cantidad => {
+                filaTotales += `"${cantidad > 0 ? cantidad + ' pers.' : '-'}";`;
+            });
+            csvContent += filaTotales + "\n";
+
+            // 6. Descarga del archivo CSV
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
