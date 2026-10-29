@@ -1,881 +1,1009 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Personal - Hotel (Modo Oscuro Suave)</title>
-  <style>
-    :root {
-      --bg: #0f172a;               /* Fondo general gris oscuro */
-      --card-bg: #1e293b;          /* Tarjetas gris pizarra */
-      --card-border: #334155;      /* Borde gris medio */
-      --text-main: #f8fafc;        /* Texto principal claro */
-      --text-muted: #94a3b8;       /* Texto secundario */
-      --primary: #cbd5e1;
-      --accent: #6366f1;           /* Violeta pastel */
-      --accent-hover: #4f46e5;
-      --table-header: #334155;
-      --input-bg: #0f172a;
-      --input-border: #475569;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Personal - Hotel (Modo Oscuro Suave)</title>
+    <style>
+        :root {
+            --bg: #0f172a;               /* Fondo general gris oscuro */
+            --card-bg: #1e293b;          /* Tarjetas gris pizarra */
+            --card-border: #334155;      /* Borde gris medio */
+            --text-main: #f8fafc;        /* Texto principal claro */
+            --text-muted: #94a3b8;       /* Texto secundario */
+            --primary: #cbd5e1;
+            --accent: #6366f1;           /* Violeta pastel */
+            --accent-hover: #4f46e5;
+            --table-header: #334155;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+        }
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg);
-      color: var(--text-main);
-      margin: 0;
-      padding: 24px;
-    }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 24px;
+        }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
 
-    header {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    header h1 {
-      color: var(--text-main);
-      font-size: 1.8rem;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-    /* PESTAÑAS PRINCIPALES DEL SISTEMA */
-    .main-nav {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .nav-btn {
-      background: #334155;
-      color: #cbd5e1;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      border: 1px solid var(--card-border);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .nav-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
-    }
-    
-    /* ÚNICA BARRA FIJA (SOLO LOS FILTROS PRINCIPALES) */
-    .sticky-filters {
-      position: sticky;
-      top: 10px;
-      z-index: 100;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-    }
+        header h1 {
+            color: var(--text-main);
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
 
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--card-border);
-    }
-    .grid-inputs {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-      align-items: end;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-    select, input {
-      width: 100%;
-      padding: 9px;
-      border: 1px solid var(--input-border);
-      border-radius: 8px;
-      box-sizing: border-box;
-      background-color: var(--input-bg);
-      color: var(--text-main);
-      font-size: 0.9rem;
-    }
-    select:focus, input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-    
-    button {
-      background-color: #475569;
-      color: white;
-      border: none;
-      padding: 9px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      font-size: 0.88rem;
-    }
-    button:hover { background-color: #64748b; }
-    .btn-masivo { background-color: var(--accent); }
-    .btn-masivo:hover { background-color: var(--accent-hover); }
-    .btn-guardar { background-color: #10b981; color: #ffffff; }
-    .btn-guardar:hover { background-color: #059669; }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      font-size: 0.88rem;
-    }
-    th, td {
-      border-bottom: 1px solid var(--card-border);
-      padding: 10px;
-      text-align: left;
-      color: var(--text-main);
-    }
-    th {
-      background-color: var(--table-header);
-      color: var(--primary);
-      font-weight: 600;
-    }
+        /* PESTAÑAS PRINCIPALES DEL SISTEMA */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-    /* BADGES / ETIQUETAS */
-    .badge {
-      background: #312e81;
-      color: #c7d2fe;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .badge-prep {
-      background: #78350f;
-      color: #fef3c7;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .badge-otros {
-      background: #075985;
-      color: #e0f2fe;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
+        .nav-btn {
+            background: #334155;
+            color: #cbd5e1;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-    .total-box {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 18px 24px;
-      border-radius: 12px;
-      text-align: right;
-      font-size: 1.25rem;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .btn-danger {
-      background-color: #991b1b;
-      color: #fecaca;
-      padding: 4px 10px;
-      font-size: 0.8rem;
-      border-radius: 6px;
-    }
-    .btn-danger:hover {
-      background-color: #dc2626;
-      color: white;
-    }
-    .tabs-header {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 14px;
-      border-bottom: 1px solid var(--card-border);
-      padding-bottom: 8px;
-    }
-    .tab-btn {
-      background: transparent;
-      color: var(--text-muted);
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      border: none;
-    }
-    .tab-btn.active {
-      background: var(--table-header);
-      color: var(--text-main);
-    }
-    .acciones-proyectos {
-      display: flex;
-      gap: 6px;
-    }
-    .box-preparativos {
-      background-color: #292524;
-      border: 1px solid #78350f;
-      padding: 10px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-    .box-aumento {
-      background-color: #064e3b;
-      border: 1px solid #047857;
-      padding: 10px;
-      border-radius: 8px;
-    }
-    .table-header-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
+        .nav-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+        }
+
+        /* ÚNICA BARRA FIJA (SOLO LOS FILTROS PRINCIPALES) */
+        .sticky-filters {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        button {
+            background-color: #475569;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.88rem;
+        }
+
+        button:hover {
+            background-color: #64748b;
+        }
+
+        .btn-masivo {
+            background-color: var(--accent);
+        }
+
+        .btn-masivo:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-guardar {
+            background-color: #10b981;
+            color: #ffffff;
+        }
+
+        .btn-guardar:hover {
+            background-color: #059669;
+        }
+
+        .btn-exportar {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        .btn-exportar:hover {
+            background-color: #0369a1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.88rem;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--card-border);
+            padding: 10px;
+            text-align: left;
+            color: var(--text-main);
+        }
+
+        th {
+            background-color: var(--table-header);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* BADGES / ETIQUETAS */
+        .badge {
+            background: #312e81;
+            color: #c7d2fe;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-prep {
+            background: #78350f;
+            color: #fef3c7;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-otros {
+            background: #075985;
+            color: #e0f2fe;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .total-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 18px 24px;
+            border-radius: 12px;
+            text-align: right;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-danger {
+            background-color: #991b1b;
+            color: #fecaca;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+        }
+
+        .tab-btn.active {
+            background: var(--table-header);
+            color: var(--text-main);
+        }
+
+        .acciones-proyectos {
+            display: flex;
+            gap: 6px;
+        }
+
+        .box-preparativos {
+            background-color: #292524;
+            border: 1px solid #78350f;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .box-aumento {
+            background-color: #064e3b;
+            border: 1px solid #047857;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .table-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Planificación y Cotización de Personal Eventual</h1>
+        </header>
 
-<div class="container">
-  <header>
-    <h1>Planificación y Cotización de Personal Eventual</h1>
-  </header>
-
-  <!-- NAVEGACIÓN PRINCIPAL ENTRE MÓDULOS -->
-  <div class="main-nav">
-    <button class="nav-btn active" id="nav-fiestas-btn" onclick="cambiarModulo('fiestas')">🎄 Fiestas de Fin de Año</button>
-    <button class="nav-btn" id="nav-otros-btn" onclick="cambiarModulo('otros')">🎉 Otros Eventos (Todo el Año)</button>
-  </div>
-
-  <!-- FILTROS PRINCIPALES FIJOS (STICKY) -->
-  <div class="sticky-filters card" style="padding: 16px;">
-    <!-- CONTROLES PARA MÓDULO FIESTAS -->
-    <div id="modulo-fiestas">
-      <div class="grid-inputs" style="grid-template-columns: 2fr 2fr 1fr;">
-        <div>
-          <label for="tipoCarga">Tipo de Asignación:</label>
-          <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
-            <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
-            <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
-          </select>
-        </div>
-        <div>
-          <label for="evento">Fiesta Imputada / Evento:</label>
-          <select id="evento" style="font-weight: 600;">
-            <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
-              <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
-              <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
-              <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
-            </optgroup>
-            <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
-              <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
-              <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
-            </optgroup>
-            <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
-              <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
-              <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
-              <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
-            </optgroup>
-            <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
-              <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
-              <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
-            </optgroup>
-          </select>
+        <!-- NAVEGACIÓN PRINCIPAL ENTRE MÓDULOS -->
+        <div class="main-nav">
+            <button class="nav-btn active" id="nav-fiestas-btn" onclick="cambiarModulo('fiestas')">🎄 Fiestas de Fin de Año</button>
+            <button class="nav-btn" id="nav-otros-btn" onclick="cambiarModulo('otros')">🎉 Otros Eventos (Todo el Año)</button>
         </div>
 
-        <div class="box-aumento">
-          <label for="porcentajeAumento" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
-          <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
-        </div>
-      </div>
+        <!-- FILTROS PRINCIPALES FIJOS (STICKY) -->
+        <div class="sticky-filters card" style="padding: 16px;">
+            <!-- CONTROLES PARA MÓDULO FIESTAS -->
+            <div id="modulo-fiestas">
+                <div class="grid-inputs" style="grid-template-columns: 2fr 2fr 1fr;">
+                    <div>
+                        <label for="tipoCarga">Tipo de Asignación:</label>
+                        <select id="tipoCarga" onchange="toggleModoPreparativos()" style="font-weight: 600;">
+                            <option value="Fiesta">🎉 Fiesta / Evento Principal</option>
+                            <option value="Preparativo">🛠️ Preparativos General / Pre-producción</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="evento">Fiesta Imputada / Evento:</label>
+                        <select id="evento" style="font-weight: 600;">
+                            <optgroup label="Navidad - 24 Diciembre (Cena / Fiesta)">
+                                <option value="Girasoles - Nochebuena (24 Dec)">Girasoles - Fiesta Nochebuena</option>
+                                <option value="Las Vasijas - Cena Nochebuena (24 Dec)">Las Vasijas - Cena 24 Diciembre</option>
+                                <option value="Don Giovanni - Cena Nochebuena (24 Dec)">Don Giovanni - Cena 24 Diciembre</option>
+                            </optgroup>
+                            <optgroup label="Navidad - 25 Diciembre (Almuerzo)">
+                                <option value="Las Vasijas - Almuerzo Navidad (25 Dec)">Las Vasijas - Almuerzo 25 Diciembre</option>
+                                <option value="Don Giovanni - Almuerzo Navidad (25 Dec)">Don Giovanni - Almuerzo 25 Diciembre</option>
+                            </optgroup>
+                            <optgroup label="Año Nuevo - 31 Diciembre (Cena / Fiesta)">
+                                <option value="Girasoles - Fiesta Año Nuevo (31 Dec)">Girasoles - Fiesta Año Nuevo</option>
+                                <option value="Las Vasijas - Cena Fin de Año (31 Dec)">Las Vasijas - Cena 31 Diciembre</option>
+                                <option value="Don Giovanni - Cena Fin de Año (31 Dec)">Don Giovanni - Cena 31 Diciembre</option>
+                            </optgroup>
+                            <optgroup label="Año Nuevo - 1 Enero (Almuerzo)">
+                                <option value="Las Vasijas - Almuerzo Año Nuevo (1 Jan)">Las Vasijas - Almuerzo 1 Enero</option>
+                                <option value="Don Giovanni - Almuerzo Año Nuevo (1 Jan)">Don Giovanni - Almuerzo 1 Enero</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="box-aumento">
+                        <label for="porcentajeAumento" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+                        <input type="number" id="porcentajeAumento" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
+                    </div>
+                </div>
 
-      <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
-        <div class="grid-inputs">
-          <div>
-            <label for="fechaPrep">Fecha de Armado / Preparativo:</label>
-            <input type="date" id="fechaPrep" value="2026-12-23">
-          </div>
-          <div>
-            <label for="detallePrep">Detalle de la Tarea:</label>
-            <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
-          </div>
+                <div id="panelFechaPrep" class="box-preparativos" style="display: none;">
+                    <div class="grid-inputs">
+                        <div>
+                            <label for="fechaPrep">Fecha de Armado / Preparativo:</label>
+                            <input type="date" id="fechaPrep" value="2026-12-23">
+                        </div>
+                        <div>
+                            <label for="detallePrep">Detalle de la Tarea:</label>
+                            <input type="text" id="detallePrep" placeholder="Ej: Mise en place Cocina o Armado de Salón">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTROLES PARA MÓDULO OTROS EVENTOS -->
+            <div id="modulo-otros" style="display: none;">
+                <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
+                    <div>
+                        <label for="nombreOtroEvento">Nombre del Evento:</label>
+                        <input type="text" id="nombreOtroEvento" placeholder="Ej: Boda Perez - Gomez / Evento Corporativo" style="font-weight: 600;">
+                    </div>
+                    <div>
+                        <label for="esFeriadoOtro">¿Es Feriado Nacional?</label>
+                        <select id="esFeriadoOtro" style="font-weight: 600;">
+                            <option value="No">No (Jornada Normal)</option>
+                            <option value="Si">Sí (100% Recargo Feriado)</option>
+                        </select>
+                    </div>
+                    <div class="box-aumento">
+                        <label for="porcentajeAumentoOtros" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
+                        <input type="number" id="porcentajeAumentoOtros" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- FORMULARIO DE CARGA DE PERSONAL -->
+        <div class="card" style="padding: 16px;">
+            <div class="tabs-header">
+                <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
+                <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
+            </div>
+
+            <!-- FORMULARIO MASIVO -->
+            <div id="form-masivo">
+                <div class="grid-inputs">
+                    <div>
+                        <label for="m_departamento">Departamento / Puesto</label>
+                        <select id="m_departamento">
+                            <option value="Cocina">Cocina</option>
+                            <option value="Banquetes">Banquetes / Camarero</option>
+                            <option value="Steward">Steward</option>
+                            <option value="Ama de Llaves">Ama de Llaves</option>
+                            <option value="Front">Front</option>
+                            <option value="Health Club">Health Club</option>
+                            <option value="Lavanderia">Lavandería</option>
+                            <option value="Limpieza">Limpieza</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Seguridad">Seguridad</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="m_cantidad">Cantidad</label>
+                        <input type="number" id="m_cantidad" value="1" min="1">
+                    </div>
+                    <div>
+                        <label for="m_horaInicio">Hora Entrada</label>
+                        <input type="time" id="m_horaInicio" value="18:00">
+                    </div>
+                    <div>
+                        <label for="m_horaFin">Hora Salida</label>
+                        <input type="time" id="m_horaFin" value="03:00">
+                    </div>
+                    <div>
+                        <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULARIO INDIVIDUAL -->
+            <div id="form-individual" style="display: none;">
+                <div class="grid-inputs">
+                    <div>
+                        <label for="departamento">Departamento / Puesto</label>
+                        <select id="departamento">
+                            <option value="Cocina">Cocina</option>
+                            <option value="Banquetes">Banquetes / Camarero</option>
+                            <option value="Steward">Steward</option>
+                            <option value="Ama de Llaves">Ama de Llaves</option>
+                            <option value="Front">Front</option>
+                            <option value="Health Club">Health Club</option>
+                            <option value="Lavanderia">Lavandería</option>
+                            <option value="Limpieza">Limpieza</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Seguridad">Seguridad</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="nombreEmpl">Nombre Empleado</label>
+                        <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
+                    </div>
+                    <div>
+                        <label for="horaInicio">Hora Entrada</label>
+                        <input type="time" id="horaInicio" value="18:00">
+                    </div>
+                    <div>
+                        <label for="horaFin">Hora Salida</label>
+                        <input type="time" id="horaFin" value="03:00">
+                    </div>
+                    <div>
+                        <button onclick="agregarIndividual()">+ Guardar Turno</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA DE DETALLE DE TURNOS -->
+        <div class="card">
+            <div class="table-header-flex">
+                <h3 style="margin: 0; color: var(--text-main); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
+                <button class="btn-danger" onclick="borrarTodosLosTurnos()">🗑️ Vaciar Planilla / Borrar Todos</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Evento / Imputación</th>
+                        <th>Tipo / Detalle</th>
+                        <th>Puesto</th>
+                        <th>Empleado</th>
+                        <th>Horario</th>
+                        <th>Hs. Diurnas</th>
+                        <th>Hs. Nocturnas</th>
+                        <th>Hs. Feriado</th>
+                        <th>Bono Fiesta</th>
+                        <th>Costo Total</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cuerpo">
+                    <!-- Contenido dinámico -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TABLA CONSOLIDADA POR FIESTA O EVENTO -->
+        <div class="card">
+            <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem;">📊 Resumen Consolidado de Costos por Evento</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Cant. Personal Total</th>
+                        <th>Costo Evento Principal</th>
+                        <th>Costo Preparativos</th>
+                        <th>Costo Total Consolidado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-consolidado">
+                    <!-- Consolidado dinámico -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- RESUMEN TOTAL Y BOTÓN DE GUARDAR / EXPORTAR -->
+        <div class="total-box">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-guardar" onclick="guardarPresupuesto()">💾 Guardar Este Presupuesto</button>
+                <button class="btn-exportar" onclick="exportarMatrizHorariosCSV()">📊 Exportar Matriz para Google Drive</button>
+            </div>
+            <div>Costo Total Proyectado: <span id="monto-total">$0.00</span></div>
+        </div>
+
+        <!-- HISTORIAL DE PROYECTOS GUARDADOS -->
+        <div class="card" style="margin-top: 24px;">
+            <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha de Guardado</th>
+                        <th>Nombre del Proyecto</th>
+                        <th>Cant. Empleados</th>
+                        <th>Monto Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-proyectos">
+                    <!-- Proyectos guardados -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- CONTROLES PARA MÓDULO OTROS EVENTOS -->
-    <div id="modulo-otros" style="display: none;">
-      <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
-        <div>
-          <label for="nombreOtroEvento">Nombre del Evento:</label>
-          <input type="text" id="nombreOtroEvento" placeholder="Ej: Boda Perez - Gomez / Evento Corporativo" style="font-weight: 600;">
-        </div>
-        <div>
-          <label for="esFeriadoOtro">¿Es Feriado Nacional?</label>
-          <select id="esFeriadoOtro" style="font-weight: 600;">
-            <option value="No">No (Jornada Normal)</option>
-            <option value="Si">Sí (100% Recargo Feriado)</option>
-          </select>
-        </div>
-        <div class="box-aumento">
-          <label for="porcentajeAumentoOtros" style="color: #a7f3d0; font-size: 0.85rem;">📈 Aumento Salarial %</label>
-          <input type="number" id="porcentajeAumentoOtros" value="0" min="0" placeholder="0" oninput="recalcularAumentoGlobal()" style="font-weight: bold; border-color: #047857; background-color: #0f172a; color: #a7f3d0;">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORMULARIO DE CARGA DE PERSONAL -->
-  <div class="card" style="padding: 16px;">
-    <div class="tabs-header">
-      <button class="tab-btn active" id="tab-masivo-btn" onclick="mostrarTab('masivo')">⚡ Carga Masiva (Grupo)</button>
-      <button class="tab-btn" id="tab-individual-btn" onclick="mostrarTab('individual')">👤 Carga Individual</button>
-    </div>
-
-    <!-- FORMULARIO MASIVO -->
-    <div id="form-masivo">
-      <div class="grid-inputs">
-        <div>
-          <label for="m_departamento">Departamento / Puesto</label>
-          <select id="m_departamento">
-            <option value="Cocina">Cocina</option>
-            <option value="Banquetes">Banquetes / Camarero</option>
-            <option value="Steward">Steward</option>
-            <option value="Ama de Llaves">Ama de Llaves</option>
-            <option value="Front">Front</option>
-            <option value="Health Club">Health Club</option>
-            <option value="Lavanderia">Lavandería</option>
-            <option value="Limpieza">Limpieza</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Seguridad">Seguridad</option>
-          </select>
-        </div>
-        <div>
-          <label for="m_cantidad">Cantidad</label>
-          <input type="number" id="m_cantidad" value="1" min="1">
-        </div>
-        <div>
-          <label for="m_horaInicio">Hora Entrada</label>
-          <input type="time" id="m_horaInicio" value="18:00">
-        </div>
-        <div>
-          <label for="m_horaFin">Hora Salida</label>
-          <input type="time" id="m_horaFin" value="03:00">
-        </div>
-        <div>
-          <button class="btn-masivo" onclick="agregarMasivo()">+ Agregar Grupo</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- FORMULARIO INDIVIDUAL -->
-    <div id="form-individual" style="display: none;">
-      <div class="grid-inputs">
-        <div>
-          <label for="departamento">Departamento / Puesto</label>
-          <select id="departamento">
-            <option value="Cocina">Cocina</option>
-            <option value="Banquetes">Banquetes / Camarero</option>
-            <option value="Steward">Steward</option>
-            <option value="Ama de Llaves">Ama de Llaves</option>
-            <option value="Front">Front</option>
-            <option value="Health Club">Health Club</option>
-            <option value="Lavanderia">Lavandería</option>
-            <option value="Limpieza">Limpieza</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Seguridad">Seguridad</option>
-          </select>
-        </div>
-        <div>
-          <label for="nombreEmpl">Nombre Empleado</label>
-          <input type="text" id="nombreEmpl" placeholder="Ej: Juan Pérez">
-        </div>
-        <div>
-          <label for="horaInicio">Hora Entrada</label>
-          <input type="time" id="horaInicio" value="18:00">
-        </div>
-        <div>
-          <label for="horaFin">Hora Salida</label>
-          <input type="time" id="horaFin" value="03:00">
-        </div>
-        <div>
-          <button onclick="agregarIndividual()">+ Guardar Turno</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TABLA DE DETALLE DE TURNOS -->
-  <div class="card">
-    <div class="table-header-flex">
-      <h3 style="margin: 0; color: var(--text-main); font-size: 1.1rem;">Detalle de Turnos e Imputación</h3>
-      <button class="btn-danger" onclick="borrarTodosLosTurnos()">🗑️ Vaciar Planilla / Borrar Todos</button>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Evento / Imputación</th>
-          <th>Tipo / Detalle</th>
-          <th>Puesto</th>
-          <th>Empleado</th>
-          <th>Horario</th>
-          <th>Hs. Diurnas</th>
-          <th>Hs. Nocturnas</th>
-          <th>Hs. Feriado</th>
-          <th>Bono Fiesta</th>
-          <th>Costo Total</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-cuerpo">
-        <!-- Contenido dinámico -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TABLA CONSOLIDADA POR FIESTA O EVENTO -->
-  <div class="card">
-    <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem;">📊 Resumen Consolidado de Costos por Evento</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Evento</th>
-          <th>Cant. Personal Total</th>
-          <th>Costo Evento Principal</th>
-          <th>Costo Preparativos</th>
-          <th>Costo Total Consolidado</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-consolidado">
-        <!-- Consolidado dinámico -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- RESUMEN TOTAL Y BOTÓN DE GUARDAR -->
-  <div class="total-box">
-    <button class="btn-guardar" onclick="guardarPresupuesto()">💾 Guardar Este Presupuesto</button>
-    <div>Costo Total Proyectado: <span id="monto-total">$0.00</span></div>
-  </div>
-
-  <!-- HISTORIAL DE PROYECTOS GUARDADOS -->
-  <div class="card" style="margin-top: 24px;">
-    <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem;">📁 Presupuestos y Proyectos Guardados</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Fecha de Guardado</th>
-          <th>Nombre del Proyecto</th>
-          <th>Cant. Empleados</th>
-          <th>Monto Total</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-proyectos">
-        <!-- Proyectos guardados -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-  const tarifarioBase = {
-    "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
-    "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
-    "Cocina": { diurno: 14240.54, nocturno: 16091.10 },
-    "Front": { diurno: 11674.65, nocturno: 13191.07 },
-    "Health Club": { diurno: 14228.95, nocturno: 16079.26 },
-    "Lavanderia": { diurno: 11674.65, nocturno: 13191.07 },
-    "Limpieza": { diurno: 11674.65, nocturno: 13191.07 },
-    "Mantenimiento": { diurno: 11674.65, nocturno: 13191.07 },
-    "Seguridad": { diurno: 13132.44, nocturno: 14838.76 },
-    "Steward": { diurno: 11674.65, nocturno: 13191.07 }
-  };
-
-  let listaEmpleados = [];
-  let contadorPuestos = {};
-  let moduloActivo = 'fiestas';
-
-  window.onload = function() {
-    cargarProyectosGuardadosUI();
-  };
-
-  function cambiarModulo(modulo) {
-    moduloActivo = modulo;
-    if (modulo === 'fiestas') {
-      document.getElementById('modulo-fiestas').style.display = 'block';
-      document.getElementById('modulo-otros').style.display = 'none';
-      document.getElementById('nav-fiestas-btn').classList.add('active');
-      document.getElementById('nav-otros-btn').classList.remove('active');
-    } else {
-      document.getElementById('modulo-fiestas').style.display = 'none';
-      document.getElementById('modulo-otros').style.display = 'block';
-      document.getElementById('nav-fiestas-btn').classList.remove('active');
-      document.getElementById('nav-otros-btn').classList.add('active');
-    }
-  }
-
-  function toggleModoPreparativos() {
-    const tipoCarga = document.getElementById('tipoCarga').value;
-    const panel = document.getElementById('panelFechaPrep');
-    panel.style.display = tipoCarga === 'Preparativo' ? 'block' : 'none';
-  }
-
-  function mostrarTab(tipo) {
-    if (tipo === 'masivo') {
-      document.getElementById('form-masivo').style.display = 'block';
-      document.getElementById('form-individual').style.display = 'none';
-      document.getElementById('tab-masivo-btn').classList.add('active');
-      document.getElementById('tab-individual-btn').classList.remove('active');
-    } else {
-      document.getElementById('form-masivo').style.display = 'none';
-      document.getElementById('form-individual').style.display = 'block';
-      document.getElementById('tab-masivo-btn').classList.remove('active');
-      document.getElementById('tab-individual-btn').classList.add('active');
-    }
-  }
-
-  function agregarMasivo() {
-    const departamento = document.getElementById('m_departamento').value;
-    const cantidad = parseInt(document.getElementById('m_cantidad').value) || 1;
-    const horaInicio = document.getElementById('m_horaInicio').value;
-    const horaFin = document.getElementById('m_horaFin').value;
-
-    if (!horaInicio || !horaFin) {
-      alert("Ingresa hora de entrada y salida.");
-      return;
-    }
-
-    for (let i = 0; i < cantidad; i++) {
-      contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
-      const nombreEtiqueta = `${departamento} ${contadorPuestos[departamento]}`;
-      crearYGuardarEmpleado(departamento, nombreEtiqueta, horaInicio, horaFin);
-    }
-
-    actualizarTabla();
-  }
-
-  function agregarIndividual() {
-    const departamento = document.getElementById('departamento').value;
-    let nombre = document.getElementById('nombreEmpl').value.trim();
-    const horaInicio = document.getElementById('horaInicio').value;
-    const horaFin = document.getElementById('horaFin').value;
-
-    if (!horaInicio || !horaFin) {
-      alert("Ingresa hora de entrada y salida.");
-      return;
-    }
-
-    if (!nombre) {
-      contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
-      nombre = `${departamento} ${contadorPuestos[departamento]}`;
-    }
-
-    crearYGuardarEmpleado(departamento, nombre, horaInicio, horaFin);
-    document.getElementById('nombreEmpl').value = '';
-    actualizarTabla();
-  }
-
-  function crearYGuardarEmpleado(departamento, nombre, horaInicio, horaFin) {
-    let evento = "";
-    let esPreparativo = false;
-    let esOtroEvento = false;
-    let esFeriadoGeneral = false;
-    let infoTipo = "";
-
-    if (moduloActivo === 'fiestas') {
-      const tipoCarga = document.getElementById('tipoCarga').value;
-      evento = document.getElementById('evento').value;
-      esPreparativo = (tipoCarga === 'Preparativo');
-      const fechaPrep = esPreparativo ? document.getElementById('fechaPrep').value : '';
-      const detallePrep = esPreparativo ? (document.getElementById('detallePrep').value || 'Preparativos') : '';
-      
-      infoTipo = esPreparativo ? `🛠️ Prep (${fechaPrep})` : '🎉 Fiesta Fin de Año';
-      if (esPreparativo) nombre = `${nombre} [${detallePrep}]`;
-
-    } else {
-      const nombreOtro = document.getElementById('nombreOtroEvento').value.trim() || 'Evento Especial';
-      evento = nombreOtro;
-      esOtroEvento = true;
-      esFeriadoGeneral = (document.getElementById('esFeriadoOtro').value === 'Si');
-      infoTipo = esFeriadoGeneral ? '🔴 Evento (Feriado Nacional)' : '🔵 Evento General';
-    }
-
-    listaEmpleados.push({
-      id: Date.now() + Math.random(),
-      evento,
-      modulo: moduloActivo,
-      infoTipo,
-      departamento,
-      nombre,
-      horaInicio,
-      horaFin,
-      horario: `${horaInicio} a ${horaFin}`,
-      esPreparativo,
-      esOtroEvento,
-      esFeriadoGeneral
-    });
-  }
-
-  function recalcularAumentoGlobal() {
-    actualizarTabla();
-  }
-
-  function calcularMontoEmpleado(e) {
-    let pctInputId = e.modulo === 'fiestas' ? 'porcentajeAumento' : 'porcentajeAumentoOtros';
-    const pctAumento = (parseFloat(document.getElementById(pctInputId).value) || 0) / 100;
-
-    const tarifaBase = tarifarioBase[e.departamento] || { diurno: 11674.65, nocturno: 13191.07 };
-
-    const tarifaDiurna = tarifaBase.diurno * (1 + pctAumento);
-    const tarifaNocturna = tarifaBase.nocturno * (1 + pctAumento);
-
-    const desglose = calcularDesgloseExacto(e, e.horaInicio, e.horaFin);
-
-    let bonoFiesta = 0;
-    if (e.modulo === 'fiestas' && !e.esPreparativo) {
-      const esCena24o31 = e.evento.includes('24 Dec') || e.evento.includes('31 Dec');
-      if (esCena24o31 && desglose.pasaMedianoche) {
-        bonoFiesta = (tarifaNocturna / 2) * desglose.horasPost21;
-      }
-    }
-
-    let multiplicadorFeriado = 1;
-    if (e.modulo === 'otros' && e.esFeriadoGeneral) {
-      multiplicadorFeriado = 2;
-    }
-
-    const costoDiurno = desglose.diurnas * tarifaDiurna * multiplicadorFeriado;
-    const costoNocturno = desglose.nocturnas * tarifaNocturna * multiplicadorFeriado;
-    const costoFeriadoFiestas = desglose.feriadoFiestas * tarifaDiurna; 
-    
-    const costoTotal = costoDiurno + costoNocturno + costoFeriadoFiestas + bonoFiesta;
-
-    return {
-      horasDiurnas: desglose.diurnas.toFixed(1),
-      horasNocturnas: desglose.nocturnas.toFixed(1),
-      horasFeriado: desglose.feriadoFiestas.toFixed(1),
-      bonoFiesta,
-      costoTotal
-    };
-  }
-
-  function calcularDesgloseExacto(e, inicio, fin) {
-    let [h1, m1] = inicio.split(':').map(Number);
-    let [h2, m2] = fin.split(':').map(Number);
-
-    let tInicio = h1 + m1 / 60;
-    let tFin = h2 + m2 / 60;
-
-    let pasaMedianoche = false;
-    if (tFin <= tInicio) {
-      tFin += 24;
-      pasaMedianoche = true;
-    }
-
-    let diurnas = 0;
-    let nocturnas = 0;
-    let feriadoFiestas = 0;
-    let horasPost21 = 0;
-
-    const esCena24o31 = e.evento.includes('24 Dec') || e.evento.includes('31 Dec');
-    const esAlmuerzoFeriado = e.evento.includes('25 Dec') || e.evento.includes('1 Jan');
-
-    for (let t = tInicio; t < tFin; t += 0.25) {
-      let horaDelDia = t % 24;
-      let esSegundoDia = t >= 24;
-
-      if (horaDelDia >= 6 && horaDelDia < 21) {
-        diurnas += 0.25;
-      } else {
-        nocturnas += 0.25;
-      }
-
-      if (t >= 21) {
-        horasPost21 += 0.25;
-      }
-
-      if (e.modulo === 'fiestas' && !e.esPreparativo) {
-        if (esCena24o31 && esSegundoDia) feriadoFiestas += 0.25;
-        if (esAlmuerzoFeriado) feriadoFiestas += 0.25;
-      }
-    }
-
-    return { diurnas, nocturnas, feriadoFiestas, pasaMedianoche, horasPost21 };
-  }
-
-  function eliminarEmpleado(id) {
-    listaEmpleados = listaEmpleados.filter(e => e.id !== id);
-    actualizarTabla();
-  }
-
-  function borrarTodosLosTurnos() {
-    if (listaEmpleados.length === 0) return;
-    if (confirm("¿Estás seguro de vaciar toda la planilla actual?")) {
-      listaEmpleados = [];
-      contadorPuestos = {};
-      actualizarTabla();
-    }
-  }
-
-  function actualizarTabla() {
-    const tbody = document.getElementById('tabla-cuerpo');
-    tbody.innerHTML = '';
-    let totalGeneral = 0;
-
-    listaEmpleados.forEach(e => {
-      const calc = calcularMontoEmpleado(e);
-      e.costoCalculado = calc.costoTotal;
-
-      totalGeneral += calc.costoTotal;
-      const tr = document.createElement('tr');
-      
-      let badgeClass = 'badge';
-      if (e.esPreparativo) badgeClass = 'badge-prep';
-      if (e.esOtroEvento) badgeClass = 'badge-otros';
-
-      tr.innerHTML = `
-        <td><strong>${e.evento}</strong></td>
-        <td><span class="${badgeClass}">${e.infoTipo}</span></td>
-        <td>${e.departamento}</td>
-        <td>${e.nombre}</td>
-        <td>${e.horario}</td>
-        <td>${calc.horasDiurnas} hs</td>
-        <td>${calc.horasNocturnas} hs</td>
-        <td>${calc.horasFeriado} hs</td>
-        <td>$${calc.bonoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        <td>$${calc.costoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        <td><button class="btn-danger" onclick="eliminarEmpleado(${e.id})">x</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('monto-total').innerText = 
-      '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-    actualizarConsolidadoPorFiesta();
-  }
-
-  function actualizarConsolidadoPorFiesta() {
-    const tbodyCons = document.getElementById('tabla-consolidado');
-    tbodyCons.innerHTML = '';
-
-    const consolidado = {};
-
-    listaEmpleados.forEach(e => {
-      if (!consolidado[e.evento]) {
-        consolidado[e.evento] = { personas: 0, costoFiesta: 0, costoPrep: 0, total: 0 };
-      }
-      consolidado[e.evento].personas += 1;
-      const costo = e.costoCalculado || 0;
-
-      if (e.esPreparativo) {
-        consolidado[e.evento].costoPrep += costo;
-      } else {
-        consolidado[e.evento].costoFiesta += costo;
-      }
-      consolidado[e.evento].total += costo;
-    });
-
-    if (Object.keys(consolidado).length === 0) {
-      tbodyCons.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">No hay datos cargados para consolidar.</td></tr>`;
-      return;
-    }
-
-    for (const [evento, data] of Object.entries(consolidado)) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><span class="badge">${evento}</span></td>
-        <td>${data.personas} pers.</td>
-        <td>$${data.costoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        <td>$${data.costoPrep.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        <td><strong>$${data.total.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></td>
-      `;
-      tbodyCons.appendChild(tr);
-    }
-  }
-
-  // --- ALMACENAMIENTO LOCAL (LOCALSTORAGE) ---
-
-  function guardarPresupuesto() {
-    if (listaEmpleados.length === 0) {
-      alert("Agrega al menos un empleado antes de guardar el presupuesto.");
-      return;
-    }
-
-    const nombre = prompt("Ingresa un nombre para este proyecto / presupuesto:", `Presupuesto Eventos - ` + new Date().toLocaleDateString('es-AR'));
-    if (!nombre) return;
-
-    const proyectosGuardados = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
-    let totalMonto = listaEmpleados.reduce((acc, e) => acc + (e.costoCalculado || 0), 0);
-
-    const nuevoProyecto = {
-      id: Date.now(),
-      nombre,
-      fecha: new Date().toLocaleString('es-AR'),
-      cantEmpleados: listaEmpleados.length,
-      totalMonto,
-      datos: [...listaEmpleados]
-    };
-
-    proyectosGuardados.push(nuevoProyecto);
-    localStorage.setItem('proyectos_hotel', JSON.stringify(proyectosGuardados));
-
-    alert("¡Presupuesto guardado con éxito!");
-    cargarProyectosGuardadosUI();
-  }
-
-  function cargarProyectosGuardadosUI() {
-    const tbody = document.getElementById('tabla-proyectos');
-    tbody.innerHTML = '';
-    const proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
-
-    if (proyectos.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">No hay presupuestos guardados aún.</td></tr>`;
-      return;
-    }
-
-    proyectos.forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${p.fecha}</td>
-        <td><strong>${p.nombre}</strong></td>
-        <td>${p.cantEmpleados} pers.</td>
-        <td>$${p.totalMonto.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        <td class="acciones-proyectos">
-          <button onclick="cargarProyecto(${p.id})">📂 Cargar</button>
-          <button class="btn-danger" onclick="borrarProyecto(${p.id})">🗑️ Borrar</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function cargarProyecto(id) {
-    const proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
-    const proj = proyectos.find(p => p.id === id);
-    if (proj) {
-      listaEmpleados = [...proj.datos];
-      actualizarTabla();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  function borrarProyecto(id) {
-    if (confirm("¿Estás seguro de eliminar este presupuesto guardado?")) {
-      let proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
-      proyectos = proyectos.filter(p => p.id !== id);
-      localStorage.setItem('proyectos_hotel', JSON.stringify(proyectos));
-      cargarProyectosGuardadosUI();
-    }
-  }
-</script>
-
+    <script>
+        const tarifarioBase = {
+            "Ama de Llaves": { diurno: 13132.44, nocturno: 14838.76 },
+            "Banquetes": { diurno: 14838.76, nocturno: 16767.81 },
+            "Cocina": { diurno: 14240.54, nocturno: 16091.10 },
+            "Front": { diurno: 11674.65, nocturno: 13191.07 },
+            "Health Club": { diurno: 14228.95, nocturno: 16079.26 },
+            "Lavanderia": { diurno: 11674.65, nocturno: 13191.07 },
+            "Limpieza": { diurno: 11674.65, nocturno: 13191.07 },
+            "Mantenimiento": { diurno: 11674.65, nocturno: 13191.07 },
+            "Seguridad": { diurno: 13132.44, nocturno: 14838.76 },
+            "Steward": { diurno: 11674.65, nocturno: 13191.07 }
+        };
+
+        let listaEmpleados = [];
+        let contadorPuestos = {};
+        let moduloActivo = 'fiestas';
+
+        window.onload = function() {
+            cargarProyectosGuardadosUI();
+        };
+
+        function cambiarModulo(modulo) {
+            moduloActivo = modulo;
+            if (modulo === 'fiestas') {
+                document.getElementById('modulo-fiestas').style.display = 'block';
+                document.getElementById('modulo-otros').style.display = 'none';
+                document.getElementById('nav-fiestas-btn').classList.add('active');
+                document.getElementById('nav-otros-btn').classList.remove('active');
+            } else {
+                document.getElementById('modulo-fiestas').style.display = 'none';
+                document.getElementById('modulo-otros').style.display = 'block';
+                document.getElementById('nav-fiestas-btn').classList.remove('active');
+                document.getElementById('nav-otros-btn').classList.add('active');
+            }
+        }
+
+        function toggleModoPreparativos() {
+            const tipoCarga = document.getElementById('tipoCarga').value;
+            const panel = document.getElementById('panelFechaPrep');
+            panel.style.display = tipoCarga === 'Preparativo' ? 'block' : 'none';
+        }
+
+        function mostrarTab(tipo) {
+            if (tipo === 'masivo') {
+                document.getElementById('form-masivo').style.display = 'block';
+                document.getElementById('form-individual').style.display = 'none';
+                document.getElementById('tab-masivo-btn').classList.add('active');
+                document.getElementById('tab-individual-btn').classList.remove('active');
+            } else {
+                document.getElementById('form-masivo').style.display = 'none';
+                document.getElementById('form-individual').style.display = 'block';
+                document.getElementById('tab-masivo-btn').classList.remove('active');
+                document.getElementById('tab-individual-btn').classList.add('active');
+            }
+        }
+
+        function agregarMasivo() {
+            const departamento = document.getElementById('m_departamento').value;
+            const cantidad = parseInt(document.getElementById('m_cantidad').value) || 1;
+            const horaInicio = document.getElementById('m_horaInicio').value;
+            const horaFin = document.getElementById('m_horaFin').value;
+
+            if (!horaInicio || !horaFin) {
+                alert("Ingresa hora de entrada y salida.");
+                return;
+            }
+
+            for (let i = 0; i < cantidad; i++) {
+                contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
+                const nombreEtiqueta = `${departamento} ${contadorPuestos[departamento]}`;
+                crearYGuardarEmpleado(departamento, nombreEtiqueta, horaInicio, horaFin);
+            }
+            actualizarTabla();
+        }
+
+        function agregarIndividual() {
+            const departamento = document.getElementById('departamento').value;
+            let nombre = document.getElementById('nombreEmpl').value.trim();
+            const horaInicio = document.getElementById('horaInicio').value;
+            const horaFin = document.getElementById('horaFin').value;
+
+            if (!horaInicio || !horaFin) {
+                alert("Ingresa hora de entrada y salida.");
+                return;
+            }
+
+            if (!nombre) {
+                contadorPuestos[departamento] = (contadorPuestos[departamento] || 0) + 1;
+                nombre = `${departamento} ${contadorPuestos[departamento]}`;
+            }
+
+            crearYGuardarEmpleado(departamento, nombre, horaInicio, horaFin);
+            document.getElementById('nombreEmpl').value = '';
+            actualizarTabla();
+        }
+
+        function crearYGuardarEmpleado(departamento, nombre, horaInicio, horaFin) {
+            let evento = "";
+            let esPreparativo = false;
+            let esOtroEvento = false;
+            let esFeriadoGeneral = false;
+            let infoTipo = "";
+
+            if (moduloActivo === 'fiestas') {
+                const tipoCarga = document.getElementById('tipoCarga').value;
+                evento = document.getElementById('evento').value;
+                esPreparativo = (tipoCarga === 'Preparativo');
+                const fechaPrep = esPreparativo ? document.getElementById('fechaPrep').value : '';
+                const detallePrep = esPreparativo ? (document.getElementById('detallePrep').value || 'Preparativos') : '';
+                
+                infoTipo = esPreparativo ? `🛠️ Prep (${fechaPrep})` : '🎉 Fiesta Fin de Año';
+                if (esPreparativo) nombre = `${nombre} [${detallePrep}]`;
+            } else {
+                const nombreOtro = document.getElementById('nombreOtroEvento').value.trim() || 'Evento Especial';
+                evento = nombreOtro;
+                esOtroEvento = true;
+                esFeriadoGeneral = (document.getElementById('esFeriadoOtro').value === 'Si');
+                infoTipo = esFeriadoGeneral ? '🔴 Evento (Feriado Nacional)' : '🔵 Evento General';
+            }
+
+            listaEmpleados.push({
+                id: Date.now() + Math.random(),
+                evento,
+                modulo: moduloActivo,
+                infoTipo,
+                departamento,
+                nombre,
+                horaInicio,
+                horaFin,
+                horario: `${horaInicio} a ${horaFin}`,
+                esPreparativo,
+                esOtroEvento,
+                esFeriadoGeneral
+            });
+        }
+
+        function recalcularAumentoGlobal() {
+            actualizarTabla();
+        }
+
+        function calcularMontoEmpleado(e) {
+            let pctInputId = e.modulo === 'fiestas' ? 'porcentajeAumento' : 'porcentajeAumentoOtros';
+            const pctAumento = (parseFloat(document.getElementById(pctInputId).value) || 0) / 100;
+            const tarifaBase = tarifarioBase[e.departamento] || { diurno: 11674.65, nocturno: 13191.07 };
+
+            const tarifaDiurna = tarifaBase.diurno * (1 + pctAumento);
+            const tarifaNocturna = tarifaBase.nocturno * (1 + pctAumento);
+
+            const desglose = calcularDesgloseExacto(e, e.horaInicio, e.horaFin);
+
+            let bonoFiesta = 0;
+            if (e.modulo === 'fiestas' && !e.esPreparativo) {
+                const esCena24o31 = e.evento.includes('24 Dec') || e.evento.includes('31 Dec');
+                if (esCena24o31 && desglose.pasaMedianoche) {
+                    bonoFiesta = (tarifaNocturna / 2) * desglose.horasPost21;
+                }
+            }
+
+            let multiplicadorFeriado = 1;
+            if (e.modulo === 'otros' && e.esFeriadoGeneral) {
+                multiplicadorFeriado = 2;
+            }
+
+            const costoDiurno = desglose.diurnas * tarifaDiurna * multiplicadorFeriado;
+            const costoNocturno = desglose.nocturnas * tarifaNocturna * multiplicadorFeriado;
+            const costoFeriadoFiestas = desglose.feriadoFiestas * tarifaDiurna;
+
+            const costoTotal = costoDiurno + costoNocturno + costoFeriadoFiestas + bonoFiesta;
+
+            return {
+                horasDiurnas: desglose.diurnas.toFixed(1),
+                horasNocturnas: desglose.nocturnas.toFixed(1),
+                horasFeriado: desglose.feriadoFiestas.toFixed(1),
+                bonoFiesta,
+                costoTotal
+            };
+        }
+
+        function calcularDesgloseExacto(e, inicio, fin) {
+            let [h1, m1] = inicio.split(':').map(Number);
+            let [h2, m2] = fin.split(':').map(Number);
+
+            let tInicio = h1 + m1 / 60;
+            let tFin = h2 + m2 / 60;
+
+            let pasaMedianoche = false;
+            if (tFin <= tInicio) {
+                tFin += 24;
+                pasaMedianoche = true;
+            }
+
+            let diurnas = 0;
+            let nocturnas = 0;
+            let feriadoFiestas = 0;
+            let horasPost21 = 0;
+
+            const esCena24o31 = e.evento.includes('24 Dec') || e.evento.includes('31 Dec');
+            const esAlmuerzoFeriado = e.evento.includes('25 Dec') || e.evento.includes('1 Jan');
+
+            for (let t = tInicio; t < tFin; t += 0.25) {
+                let horaDelDia = t % 24;
+                let esSegundoDia = t >= 24;
+
+                if (horaDelDia >= 6 && horaDelDia < 21) {
+                    diurnas += 0.25;
+                } else {
+                    nocturnas += 0.25;
+                }
+
+                if (t >= 21) {
+                    horasPost21 += 0.25;
+                }
+
+                if (e.modulo === 'fiestas' && !e.esPreparativo) {
+                    if (esCena24o31 && esSegundoDia) feriadoFiestas += 0.25;
+                    if (esAlmuerzoFeriado) feriadoFiestas += 0.25;
+                }
+            }
+
+            return { diurnas, nocturnas, feriadoFiestas, pasaMedianoche, horasPost21 };
+        }
+
+        function eliminarEmpleado(id) {
+            listaEmpleados = listaEmpleados.filter(e => e.id !== id);
+            actualizarTabla();
+        }
+
+        function borrarTodosLosTurnos() {
+            if (listaEmpleados.length === 0) return;
+            if (confirm("¿Estás seguro de vaciar toda la planilla actual?")) {
+                listaEmpleados = [];
+                contadorPuestos = {};
+                actualizarTabla();
+            }
+        }
+
+        function actualizarTabla() {
+            const tbody = document.getElementById('tabla-cuerpo');
+            tbody.innerHTML = '';
+            let totalGeneral = 0;
+
+            listaEmpleados.forEach(e => {
+                const calc = calcularMontoEmpleado(e);
+                e.costoCalculado = calc.costoTotal;
+                totalGeneral += calc.costoTotal;
+
+                const tr = document.createElement('tr');
+                let badgeClass = 'badge';
+                if (e.esPreparativo) badgeClass = 'badge-prep';
+                if (e.esOtroEvento) badgeClass = 'badge-otros';
+
+                tr.innerHTML = `
+                    <td><strong>${e.evento}</strong></td>
+                    <td><span class="${badgeClass}">${e.infoTipo}</span></td>
+                    <td>${e.departamento}</td>
+                    <td>${e.nombre}</td>
+                    <td>${e.horario}</td>
+                    <td>${calc.horasDiurnas} hs</td>
+                    <td>${calc.horasNocturnas} hs</td>
+                    <td>${calc.horasFeriado} hs</td>
+                    <td>$${calc.bonoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>$${calc.costoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td><button class="btn-danger" onclick="eliminarEmpleado(${e.id})">x</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('monto-total').innerText = '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            actualizarConsolidadoPorFiesta();
+        }
+
+        function actualizarConsolidadoPorFiesta() {
+            const tbodyCons = document.getElementById('tabla-consolidado');
+            tbodyCons.innerHTML = '';
+
+            const consolidado = {};
+
+            listaEmpleados.forEach(e => {
+                if (!consolidado[e.evento]) {
+                    consolidado[e.evento] = { personas: 0, costoFiesta: 0, costoPrep: 0, total: 0 };
+                }
+                consolidado[e.evento].personas += 1;
+                const costo = e.costoCalculado || 0;
+
+                if (e.esPreparativo) {
+                    consolidado[e.evento].costoPrep += costo;
+                } else {
+                    consolidado[e.evento].costoFiesta += costo;
+                }
+                consolidado[e.evento].total += costo;
+            });
+
+            if (Object.keys(consolidado).length === 0) {
+                tbodyCons.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">No hay datos cargados para consolidar.</td></tr>`;
+                return;
+            }
+
+            for (const [evento, data] of Object.entries(consolidado)) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="badge">${evento}</span></td>
+                    <td>${data.personas} pers.</td>
+                    <td>$${data.costoFiesta.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>$${data.costoPrep.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td><strong>$${data.total.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></td>
+                `;
+                tbodyCons.appendChild(tr);
+            }
+        }
+
+        // --- EXPORTAR A GOOGLE DRIVE / EXCEL (MATRIZ DE HORARIOS HORIZONTAL) ---
+        function exportarMatrizHorariosCSV() {
+            if (listaEmpleados.length === 0) {
+                alert("No hay turnos cargados para exportar.");
+                return;
+            }
+
+            // 1. Obtener eventos disponibles para filtrar si se desea
+            const eventos = [...new Set(listaEmpleados.map(e => e.evento))];
+            
+            const eventoSeleccionado = prompt(
+                "Ingresá el nombre del evento a exportar (o dejá en blanco para exportar TODOS los eventos):\n\nEventos disponibles:\n- " + eventos.join("\n- "),
+                ""
+            );
+
+            let empleadosFiltrados = listaEmpleados;
+            if (eventoSeleccionado && eventoSeleccionado.trim() !== "") {
+                empleadosFiltrados = listaEmpleados.filter(e => 
+                    e.evento.toLowerCase().includes(eventoSeleccionado.trim().toLowerCase())
+                );
+            }
+
+            if (empleadosFiltrados.length === 0) {
+                alert("No se encontraron turnos para el filtro ingresado.");
+                return;
+            }
+
+            // 2. Crear los bloques de horario (de 06:00 AM a 05:30 AM del día siguiente, intervalos de 30 min)
+            const bloquesHorarios = [];
+            for (let h = 6; h < 30; h += 0.5) {
+                const horaEntera = Math.floor(h % 24).toString().padStart(2, '0');
+                const minutos = (h % 1 === 0) ? '00' : '30';
+                bloquesHorarios.push({
+                    label: `${horaEntera}:${minutos}`,
+                    valorDecimal: h
+                });
+            }
+
+            // 3. Encabezados del CSV (Primera fila con los nombres de las columnas)
+            let csvContent = "\uFEFF"; // UTF-8 BOM para soporte de tildes en Excel / Drive
+            
+            let filaEncabezado = "EVENTO / FIESTA;DEPARTAMENTO;EMPLEADO;";
+            bloquesHorarios.forEach(bloque => {
+                filaEncabezado += `"${bloque.label}";`;
+            });
+            csvContent += filaEncabezado + "\n";
+
+            // 4. Filas: Una fila por cada empleado cargado
+            empleadosFiltrados.forEach(e => {
+                let filaEmpleado = `"${e.evento}";"${e.departamento}";"${e.nombre}";`;
+
+                let [h1, m1] = e.horaInicio.split(':').map(Number);
+                let [h2, m2] = e.horaFin.split(':').map(Number);
+
+                let tInicio = h1 + m1 / 60;
+                let tFin = h2 + m2 / 60;
+
+                // Ajuste para turnos que pasan de medianoche (ej: 18:00 a 03:00)
+                if (tInicio < 6) tInicio += 24;
+                if (tFin <= tInicio) tFin += 24;
+
+                // Recorrer cada columna de hora y verificar si el empleado está en turno
+                bloquesHorarios.forEach(bloque => {
+                    if (bloque.valorDecimal >= tInicio && bloque.valorDecimal < tFin) {
+                        filaEmpleado += `"X";`;
+                    } else {
+                        filaEmpleado += `";`;
+                    }
+                });
+
+                csvContent += filaEmpleado + "\n";
+            });
+
+            // 5. Descargar el archivo CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            
+            const nombreArchivo = eventoSeleccionado ? `Matriz_${eventoSeleccionado.replace(/[^a-zA-Z0-9]/g, '_')}` : 'Matriz_Horarios_General';
+            link.setAttribute("download", `${nombreArchivo}.csv`);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- ALMACENAMIENTO LOCAL (LOCALSTORAGE) ---
+        function guardarPresupuesto() {
+            if (listaEmpleados.length === 0) {
+                alert("Agrega al menos un empleado antes de guardar el presupuesto.");
+                return;
+            }
+
+            const nombre = prompt("Ingresa un nombre para este proyecto / presupuesto:", `Presupuesto Eventos - ` + new Date().toLocaleDateString('es-AR'));
+            if (!nombre) return;
+
+            const proyectosGuardados = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+            let totalMonto = listaEmpleados.reduce((acc, e) => acc + (e.costoCalculado || 0), 0);
+
+            const nuevoProyecto = {
+                id: Date.now(),
+                nombre,
+                fecha: new Date().toLocaleString('es-AR'),
+                cantEmpleados: listaEmpleados.length,
+                totalMonto,
+                datos: [...listaEmpleados]
+            };
+
+            proyectosGuardados.push(nuevoProyecto);
+            localStorage.setItem('proyectos_hotel', JSON.stringify(proyectosGuardados));
+            alert("¡Presupuesto guardado con éxito!");
+            cargarProyectosGuardadosUI();
+        }
+
+        function cargarProyectosGuardadosUI() {
+            const tbody = document.getElementById('tabla-proyectos');
+            tbody.innerHTML = '';
+
+            const proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+
+            if (proyectos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">No hay presupuestos guardados aún.</td></tr>`;
+                return;
+            }
+
+            proyectos.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.fecha}</td>
+                    <td><strong>${p.nombre}</strong></td>
+                    <td>${p.cantEmpleados} pers.</td>
+                    <td>$${p.totalMonto.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="acciones-proyectos">
+                        <button onclick="cargarProyecto(${p.id})">📂 Cargar</button>
+                        <button class="btn-danger" onclick="borrarProyecto(${p.id})">🗑️ Borrar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function cargarProyecto(id) {
+            const proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+            const proj = proyectos.find(p => p.id === id);
+
+            if (proj) {
+                listaEmpleados = [...proj.datos];
+                actualizarTabla();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function borrarProyecto(id) {
+            if (confirm("¿Estás seguro de eliminar este presupuesto guardado?")) {
+                let proyectos = JSON.parse(localStorage.getItem('proyectos_hotel') || '[]');
+                proyectos = proyectos.filter(p => p.id !== id);
+                localStorage.setItem('proyectos_hotel', JSON.stringify(proyectos));
+                cargarProyectosGuardadosUI();
+            }
+        }
+    </script>
 </body>
 </html>
