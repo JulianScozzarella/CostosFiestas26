@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Personal Eventual - Fiestas</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #0d9488;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1, h2, h3 {
+      color: var(--primary);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .grid-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    select, input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: var(--primary);
+    }
+    .total-box {
+      background-color: #eff6ff;
+      border: 2px solid var(--primary);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .btn-danger {
+      background-color: #ef4444;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Calculadora de Personal Eventual - Fiestas Hotel</h1>
+    <p>Planificación de costos para 24/12, 25/12, 31/12 y 01/01/2027</p>
+  </header>
+
+  <!-- MÓDULO DE INGRESO -->
+  <div class="card">
+    <h2>Agregar Turno de Personal</h2>
+    <div class="grid-inputs">
+      <div>
+        <label for="fecha">Evento / Fecha</label>
+        <select id="fecha">
+          <option value="24/12 (Nochebuena)">24/12 (Nochebuena)</option>
+          <option value="25/12 (Navidad - Feriado)">25/12 (Navidad - Feriado)</option>
+          <option value="31/12 (Fin de Año)">31/12 (Fin de Año)</option>
+          <option value="01/01 (Año Nuevo - Feriado)">01/01 (Año Nuevo - Feriado)</option>
+        </select>
+      </div>
+      <div>
+        <label for="locacion">Locación / Área</label>
+        <select id="locacion">
+          <option value="Salón de Eventos">Salón de Eventos</option>
+          <option value="Restaurante 1">Restaurante 1</option>
+          <option value="Restaurante 2">Restaurante 2</option>
+        </select>
+      </div>
+      <div>
+        <label for="departamento">Departamento</label>
+        <select id="departamento">
+          <option value="Ama de Llaves">Ama de Llaves</option>
+          <option value="Banquetes">Banquetes</option>
+          <option value="Cocina">Cocina</option>
+          <option value="Front">Front</option>
+          <option value="Health Club">Health Club</option>
+          <option value="Lavanderia">Lavandería</option>
+          <option value="Limpieza">Limpieza</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Seguridad">Seguridad</option>
+          <option value="Steward">Steward</option>
+        </select>
+      </div>
+      <div>
+        <label for="turno">Turno Horario</label>
+        <select id="turno">
+          <option value="Diurno">Diurno (06:00 - 21:00)</option>
+          <option value="Nocturno">Nocturno (21:00 - 06:00)</option>
+        </select>
+      </div>
+      <div>
+        <label for="personas">Cantidad de Personas</label>
+        <input type="number" id="personas" min="1" value="1">
+      </div>
+      <div>
+        <label for="bono">Bono Fiesta ($ por persona)</label>
+        <input type="number" id="bono" value="0" placeholder="Ej: 5000">
+      </div>
+    </div>
+    <button onclick="agregarTurno()">+ Agregar a la Planificación</button>
+  </div>
+
+  <!-- TABLA DE DETALLE -->
+  <div class="card">
+    <h2>Desglose de la Planificación</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Locación</th>
+          <th>Departamento</th>
+          <th>Turno</th>
+          <th>Cant.</th>
+          <th>Costo Unitario</th>
+          <th>Subtotal</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-cuerpo">
+        <!-- Se genera dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RESUMEN TOTAL -->
+  <div class="total-box">
+    Costo Total Proyectado de Personal: <span id="monto-total">$0.00</span>
+  </div>
+</div>
+
+<script>
+  // Tarifas base por departamento cargadas desde tu planilla (Valores con c/SAC)
+  const tarifario = {
+    "Ama de Llaves": { diurno: 9874.02, nocturno: 11157.64 },
+    "Banquetes": { diurno: 11156.97, nocturno: 12607.37 },
+    "Cocina": { diurno: 10707.17, nocturno: 12099.10 },
+    "Front": { diurno: 8777.94, nocturno: 9919.07 },
+    "Health Club": { diurno: 10698.46, nocturno: 12089.26 },
+    "Lavanderia": { diurno: 8777.94, nocturno: 9919.07 },
+    "Limpieza": { diurno: 8777.94, nocturno: 9919.07 },
+    "Mantenimiento": { diurno: 8777.94, nocturno: 9919.07 },
+    "Seguridad": { diurno: 9874.02, nocturno: 11157.64 },
+    "Steward": { diurno: 8777.94, nocturno: 9919.07 }
+  };
+
+  let planificacion = [];
+
+  function agregarTurno() {
+    const fecha = document.getElementById('fecha').value;
+    const locacion = document.getElementById('locacion').value;
+    const departamento = document.getElementById('departamento').value;
+    const turno = document.getElementById('turno').value;
+    const personas = parseInt(document.getElementById('personas').value) || 1;
+    const bono = parseFloat(document.getElementById('bono').value) || 0;
+
+    // Obtener valor base según turno
+    let costoUnitario = turno === 'Diurno' 
+      ? tarifario[departamento].diurno 
+      : tarifario[departamento].nocturno;
+
+    // Recargo del 100% si es día feriado (25/12 o 01/01)
+    const esFeriado = fecha.includes('25/12') || fecha.includes('01/01');
+    if (esFeriado) {
+      costoUnitario *= 2;
+    }
+
+    // Sumar el bono por fiesta al costo unitario
+    costoUnitario += bono;
+
+    const subtotal = costoUnitario * personas;
+
+    planificacion.push({
+      id: Date.now(),
+      fecha,
+      locacion,
+      departamento,
+      turno,
+      personas,
+      costoUnitario,
+      subtotal
+    });
+
+    actualizarTabla();
+  }
+
+  function eliminarTurno(id) {
+    planificacion = planificacion.filter(item => item.id !== id);
+    actualizarTabla();
+  }
+
+  function actualizarTabla() {
+    const tbody = document.getElementById('tabla-cuerpo');
+    tbody.innerHTML = '';
+    let totalGeneral = 0;
+
+    planificacion.forEach(item => {
+      totalGeneral += item.subtotal;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.fecha}</td>
+        <td>${item.locacion}</td>
+        <td>${item.departamento}</td>
+        <td>${item.turno}</td>
+        <td>${item.personas}</td>
+        <td>$${item.costoUnitario.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td>
+        <td>$${item.subtotal.toLocaleString('es-AR', {minimumFractionDigits: 2})}</td>
+        <td><button class="btn-danger" onclick="eliminarTurno(${item.id})">x</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('monto-total').innerText = 
+      '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2});
+  }
+</script>
+
+</body>
+</html>
